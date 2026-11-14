@@ -400,7 +400,15 @@ async function apiJson(prompt, opts){
     $("#go").style.display = (ai && AI.mode === "api" && !AI.key()) ? "none" : "";
     if (!ai) setStatus(""); else if (AI.mode === "api" && !AI.key()) setStatus("Откройте сервис в Claude кнопкой выше, или раскройте пункт про ключ API."); else setStatus(""); refreshGo(); };
   document.querySelectorAll('input[name="engine"]').forEach(r => r.addEventListener("change", syncEngine));
-  if ($("#openClaude")) $("#openClaude").href = CLAUDE_APP_URL;
+  if ($("#openClaude")) {
+    $("#openClaude").href = CLAUDE_APP_URL;
+    // open Claude in a window next to this site (right half of the screen); a plain new tab if pop-ups are blocked
+    $("#openClaude").addEventListener("click", ev => {
+      const sw = screen.availWidth || 1400, sh = screen.availHeight || 900, w = Math.max(700, Math.round(sw / 2)), left = (screen.availLeft || 0) + sw - w, top = screen.availTop || 0;
+      const win = window.open(CLAUDE_APP_URL, "p2w_claude", `popup=yes,width=${w},height=${sh},left=${left},top=${top}`);
+      if (win) { ev.preventDefault(); try { win.focus(); } catch {} setStatus("Claude-версия открыта в окне справа. Этот сайт остаётся открытым."); }
+    });
+  }
   if (AI.mode === "api") {
     imgLimit = 3;
     const saved = LS.get("p2w_key"); if (saved) { $("#apiKey").value = saved; $("#apiRemember").checked = true; }
