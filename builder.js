@@ -19,7 +19,7 @@
     // "**bold**, *italic*, ^^handwritten^^" -> runs
     function parseInline(text) {
       const res = []; const re = /(\^\^[^^]+\^\^|\*\*[^*]+\*\*|\*[^*\s][^*]*\*)/g; let last = 0, m;
-      text = String(text ?? "");
+      text = String(text ?? "").replace(/\{\{\?([^}]*)\}\}/g, "$1");
       while ((m = re.exec(text))) {
         if (m.index > last) res.push({ text: text.slice(last, m.index) });
         const s = m[0];

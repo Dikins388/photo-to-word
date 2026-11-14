@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Фото → Word: восстановить документ по фото или скану в редактируемый Word (.docx) онлайн</title>
-<meta name="description" content="Бесплатный онлайн-сервис: загрузите фото или скан листа — получите редактируемый Word (.docx) с теми же таблицами, бланком, графиками и расположением текста. Відновлення документа з фото у Word.">
+<meta name="description" content="Бесплатно и без регистрации: фото или скан листа → редактируемый Word (.docx) с тем же бланком, таблицами и расположением текста. Распознавание в браузере, файлы никуда не загружаются. Відновлення документа з фото у Word.">
 <meta name="keywords" content="фото в word, скан в word, распознать документ, восстановить документ по фото, OCR таблицы, фото в docx, відновити документ з фото, фото у ворд, розпізнавання тексту">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://dikins388.github.io/photo-to-word/">
@@ -24,11 +24,13 @@
   --acc:#1f6f5c; --acc-ink:#fff; --acc-soft:#dcebe5; --warn:#a4471f; --paper:#fff;
 }
 *{box-sizing:border-box}
+html,body{height:100%}
+body{display:flex;flex-direction:column;height:100vh}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "IBM Plex Sans",system-ui,sans-serif}
 header{display:flex;align-items:baseline;gap:14px;padding:16px 22px 10px;border-bottom:1px solid var(--line);background:var(--panel)}
 header h1{font-size:18px;margin:0;font-weight:600;letter-spacing:-.01em}
 header .sub{color:var(--muted);font-size:13px}
-.app{display:grid;grid-template-columns:330px 1fr;height:calc(100vh - 52px)}
+.app{display:grid;grid-template-columns:330px 1fr;flex:1;min-height:0}
 body.cmp .app{grid-template-columns:1fr}
 body.cmp.side .app{grid-template-columns:330px 1fr}
 body.cmp:not(.side) aside{display:none}
@@ -57,6 +59,15 @@ button.sm{padding:3px 7px;font-size:12px}
 .opt{display:flex;gap:7px;align-items:center;font-size:13px;margin:0 0 7px;cursor:pointer}
 .opt input{accent-color:var(--acc)}
 .about h2{font-size:14px;margin:0 0 4px}.about h3{font-size:13px;margin:8px 0 2px}.about p{font-size:12.5px;color:var(--muted);margin:0}
+.tag{font-size:11px;color:var(--muted);background:#eef2ee;border-radius:5px;padding:1px 5px;margin-left:2px}
+.paper .lowc{background:#fff3b0;border-bottom:1.5px dotted #c99a00}
+.ad{display:flex;align-items:center;justify-content:center;overflow:hidden;color:#9aa29c;font-size:12px;letter-spacing:.02em}
+.ad.ph{border:1px dashed #cfd5ce;border-radius:8px;background:repeating-linear-gradient(45deg,#f6f7f4 0 10px,#f1f3ef 10px 20px)}
+.ad.ph a{color:inherit}
+.ad-top{margin:8px auto;width:min(728px,94vw);min-height:90px}
+.ad-side{min-height:250px}
+.ad-bottom{margin:18px auto 0;width:min(728px,100%);min-height:90px}
+body.inclaude .ad{display:none!important}
 .note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
 main{display:flex;flex-direction:column;min-width:0;min-height:0}
 .work{flex:1;min-height:0;display:grid;grid-template-columns:1fr}
@@ -140,6 +151,7 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
 </head>
 <body>
 <header><h1>Фото → Word</h1><span class="sub">восстановление сканов и фотографий документов: текст, таблицы, графики, печати</span></header>
+<div class="ad ad-top" id="ad-top" aria-label="Реклама"></div>
 <div class="app">
   <aside>
     <div>
@@ -148,6 +160,11 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
         <input type="file" id="file" accept="image/*" multiple hidden></label>
     </div>
     <div class="thumbs" id="thumbs"></div>
+    <div>
+      <div class="step">Движок распознавания</div>
+      <label class="opt"><input type="radio" name="engine" value="ocr" checked> Бесплатно, прямо в браузере <span class="tag">фото не покидают компьютер</span></label>
+      <label class="opt"><input type="radio" name="engine" value="ai"> Claude AI <span class="tag">точнее на сложных фото</span></label>
+    </div>
     <div id="apiBox" hidden>
       <div class="step">Ключ API Anthropic</div>
       <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-…" style="width:100%;padding:8px;font:inherit;border:1px solid var(--line);border-radius:7px">
@@ -164,10 +181,12 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
       <div class="step">2 · Распознавание</div>
       <label class="opt"><input type="checkbox" id="optLayout" checked> Точная раскладка: фон бланка и места блоков как в оригинале</label>
       <label class="opt" style="padding-left:22px"><input type="checkbox" id="optBreaks" checked> переносы строк как в оригинале</label>
+      <div id="aiOpts">
       <label class="opt"><input type="checkbox" id="optSkip" checked> Пропускать печати и подписи</label>
       <label class="opt"><input type="checkbox" id="optCharts" checked> Перерисовывать графики начисто</label>
       <label class="opt"><input type="checkbox" id="optVerify" checked> Сверять таблицы вторым проходом (точнее, но дольше)</label>
       <label class="opt"><input type="checkbox" id="optHand"> Распознавать рукописный текст</label>
+      </div>
       <button class="primary" id="go" disabled>Распознать и собрать документ</button>
       <div style="display:flex;gap:6px;margin-top:6px"><button class="sm" id="stop" hidden>Остановить</button></div>
       <div class="bar" id="bar"><i></i></div>
@@ -177,9 +196,11 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
       <div class="step">3 · Правка и экспорт</div>
       <div class="status">Правьте текст прямо в листе. Для таблиц поставьте курсор в ячейку и используйте кнопки «Таблица»: строки, столбцы, объединение, ширина, рамки. У картинки при наведении: ⇄ график/фото (или распознать график), ✎ данные графика, ◐ белый фон, ✂ другая область, −/+ размер.</div>
     </div>
+    <div class="ad ad-side" id="ad-side" aria-label="Реклама"></div>
     <section class="about">
       <h2>Что умеет сервис</h2>
-      <p>Восстанавливает документ по фото или скану в редактируемый Word (.docx): текст, таблицы с объединёнными ячейками, бланк, логотипы, рисунки и графики. В режиме точной раскладки бланк и рисунки остаются фоном как на оригинале, а весь текст стоит на тех же местах и редактируется.</p>
+      <p>Бесплатно и без регистрации восстанавливает документ по фото или скану в редактируемый Word (.docx): текст, таблицы с объединёнными ячейками, бланк, логотипы и рисунки. Бланк и рисунки остаются фоном как на оригинале, а весь текст стоит на тех же местах, тем же шрифтом, и редактируется.</p>
+      <p>Распознавание идёт прямо в вашем браузере: фото никуда не загружаются, поэтому сервисом можно пользоваться и для медицинских, и для личных документов. Лучше всего результат на ровных сканах; для сложных фото есть режим Claude AI.</p>
       <h3>Как пользоваться</h3>
       <p>Загрузите фото страниц, нажмите «Распознать», сверьте результат с оригиналом в режиме сравнения, поправьте и скачайте .docx.</p>
       <h3>Українською</h3>
@@ -246,7 +267,7 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
           <label class="opt" style="margin:0"><input type="checkbox" id="syncScroll" checked> синхронная прокрутка</label>
           <label class="opt" style="margin:0" id="diffLbl"><input type="checkbox" id="showDiff" checked> подсветить отличия</label>
         </div>
-        <div class="stage" id="stage"><div class="paper" id="paper" contenteditable="true" spellcheck="false"></div></div>
+        <div class="stage" id="stage"><div class="paper" id="paper" contenteditable="true" spellcheck="false"></div><div class="ad ad-bottom" id="ad-bottom" aria-label="Реклама"></div></div>
       </div>
     </div>
   </main>
@@ -263,6 +284,8 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
 <script src="docx.iife.js"></script>
 <script src="builder.js"></script>
 <script src="chart.js"></script>
+<script src="ocr.js"></script>
+<script src="ads.js"></script>
 <script>
 "use strict";
 const $ = s => document.querySelector(s);
@@ -273,6 +296,21 @@ let sampleFn = null, downloads = null, imgLimit = 0, ctl = null;
 function toast(t){ const el=$("#toast"); el.textContent=t; el.style.display="block"; clearTimeout(toast._t); toast._t=setTimeout(()=>el.style.display="none",2600); }
 function setStatus(t, err){ statusEl.textContent=t||""; statusEl.classList.toggle("err",!!err); }
 
+/* ---------- advertising slots (configured in ads.js) ---------- */
+(function fillAds(){
+  const A = window.ADS || {};
+  const inClaude = typeof window.claude !== "undefined" && window.claude && typeof window.claude.use === "function";
+  if (inClaude) { document.body.classList.add("inclaude"); return; }
+  for (const slot of ["top", "side", "bottom"]) {
+    const box = document.getElementById("ad-" + slot); if (!box) continue;
+    const code = String(A[slot] || "").trim();
+    if (!code) { box.classList.add("ph"); const t = A.placeholderText || "Здесь может быть ваша реклама";
+      box.innerHTML = A.placeholderLink ? `<a href="${A.placeholderLink}" target="_blank" rel="noopener">${t}</a>` : t; continue; }
+    box.innerHTML = code;
+    box.querySelectorAll("script").forEach(old => { const s = document.createElement("script"); for (const at of old.attributes) s.setAttribute(at.name, at.value); s.text = old.text; old.replaceWith(s); });
+  }
+})();
+
 /* ---------- capabilities ---------- */
 // Inside Claude the page asks Claude through the viewer's account. Anywhere else (GitHub Pages etc.)
 // the visitor uses their own Anthropic API key, sent straight from their browser to api.anthropic.com.
@@ -280,7 +318,8 @@ const hasClaude = typeof window.claude !== "undefined" && window.claude && typeo
 const LS = { get(k){ try { return localStorage.getItem(k); } catch { return null; } }, set(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} } };
 const AI = {
   mode: hasClaude ? "claude" : "api",
-  ready(){ return this.mode === "claude" ? !!(sampleFn && imgLimit) : !!this.key(); },
+  engine(){ const r = document.querySelector('input[name="engine"]:checked'); return r ? r.value : "ocr"; },
+  ready(){ if (this.engine() === "ocr") return true; return this.mode === "claude" ? !!(sampleFn && imgLimit) : !!this.key(); },
   key(){ return ($("#apiKey") && $("#apiKey").value.trim()) || ""; },
   model(){ return ($("#apiModel") && $("#apiModel").value) || "claude-sonnet-5-5"; },
   async json(prompt, opts){
@@ -332,16 +371,19 @@ async function apiJson(prompt, opts){
     if (sampleFn) { try { const l = await sampleFn.limits(); imgLimit = l.images ? l.images.maxCount : 0; } catch { imgLimit = 0; } }
     if (!sampleFn || !imgLimit) { AI.mode = "api"; }
   }
+  if (AI.mode === "claude") document.querySelector('input[name="engine"][value="ai"]').checked = true;
+  const syncEngine = () => { const ai = AI.engine() === "ai"; $("#apiBox").hidden = !(ai && AI.mode === "api"); $("#aiOpts").style.display = ai ? "" : "none";
+    if (!ai) setStatus(""); else if (AI.mode === "api" && !AI.key()) setStatus("Введите свой ключ API Anthropic выше, чтобы распознавать через Claude."); refreshGo(); };
+  document.querySelectorAll('input[name="engine"]').forEach(r => r.addEventListener("change", syncEngine));
   if (AI.mode === "api") {
-    imgLimit = 3; $("#apiBox").hidden = false;
+    imgLimit = 3;
     const saved = LS.get("p2w_key"); if (saved) { $("#apiKey").value = saved; $("#apiRemember").checked = true; }
     const m = LS.get("p2w_model"); if (m) $("#apiModel").value = m;
     $("#apiKey").addEventListener("input", () => { if ($("#apiRemember").checked) LS.set("p2w_key", AI.key() || null); refreshGo(); });
     $("#apiRemember").addEventListener("change", e => LS.set("p2w_key", e.target.checked ? (AI.key() || null) : null));
     $("#apiModel").addEventListener("change", e => LS.set("p2w_model", e.target.value));
-    if (!AI.key()) setStatus("Введите свой ключ API Anthropic выше, чтобы распознавать фото.");
   }
-  refreshGo();
+  syncEngine();
 })();
 
 /* ---------- loading photos ---------- */
@@ -471,6 +513,29 @@ async function recognize(){
   try {
     for (let i = 0; i < pages.length; i++) {
       const p = pages[i]; const t0 = Date.now();
+      if (AI.engine() === "ocr") {
+        setStatus(`Страница ${i+1} из ${pages.length}: загружаю движок распознавания…`);
+        const r = await OCR.page(p.canvas, m => {
+          if (m.status === "recognizing text") setStatus(`Страница ${i+1} из ${pages.length}: распознаю текст… ${Math.round((m.progress || 0) * 100)}%`);
+          else if (/load|initializ/.test(m.status || "")) setStatus(`Загружаю движок (один раз, ~10 МБ)… ${Math.round((m.progress || 0) * 100)}%`);
+        });
+        if (ctl.signal.aborted) throw { code: "cancelled" };
+        if (r.rotated) { p.canvas = r.canvas; renderThumbs(); }
+        const blocks = r.blocks;
+        if ($("#optLayout").checked && blocks.length) {
+          setStatus(`Страница ${i+1} из ${pages.length}: раскладываю текст и готовлю фон…`); await new Promise(z => setTimeout(z, 20));
+          // blocks from the free engine already carry exact lines, pitch and widths from the word boxes
+          paper.classList.add("layout"); p.layout = true;
+          p.bg = makeBackground(p.canvas, blocks).toDataURL("image/jpeg", 0.86);
+          renderLayoutPage(blocks, i, paper);
+        } else {
+          if (i > 0) paper.append(el("div", { class: "pb", contenteditable: "false" }));
+          renderBlocks(blocks.map(b => ({ ...b, text: b.type === "paragraph" ? String(b.text).replace(/\n/g, " ") : b.text })), i);
+        }
+        if (r.poor) { setStatus("Фото распознаётся плохо: снимите лист ровно сверху, при хорошем свете, без теней, или отсканируйте. Для сложных фото есть режим Claude AI.", true); await new Promise(z => setTimeout(z, 2500)); }
+        else if (r.lowCount) toast(`Подсвечено слов для проверки: ${r.lowCount}`);
+        continue;
+      }
       const tick = setInterval(() => setStatus(`Страница ${i+1} из ${pages.length}: распознаю… ${Math.round((Date.now()-t0)/1000)} с`), 500);
       const imgs = [await toBlob(p.canvas)];
       if (imgLimit >= 3) { imgs.push(await toBlob(cropCanvas(p.canvas, 0, 0, 1, .55))); imgs.push(await toBlob(cropCanvas(p.canvas, 0, .45, 1, 1))); }
@@ -517,7 +582,7 @@ async function recognize(){
         renderBlocks(blocks, i);
       }
     }
-    setStatus("Готово. Слева оригинал, справа результат: сверьте и поправьте, затем скачайте .docx.");
+    setStatus("Готово. Слева оригинал, справа результат: сверьте и поправьте (жёлтым подсвечены сомнительные слова), затем скачайте .docx.");
     openCompare();
   } catch (e) {
     const code = e && e.code;
@@ -535,7 +600,7 @@ async function recognize(){
 /* ---------- JSON -> editable HTML ---------- */
 function el(tag, attrs, html){ const e = document.createElement(tag); for (const k in (attrs||{})) if (attrs[k] != null) e.setAttribute(k, attrs[k]); if (html != null) e.innerHTML = html; return e; }
 function escapeHtml(s){ return String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-function inlineMd(s){ return escapeHtml(s).replace(/\^\^([^^]+)\^\^/g, '<span class="hw">$1</span>').replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>").replace(/\n/g, "<br>"); }
+function inlineMd(s){ return escapeHtml(s).replace(/\{\{\?([^}]*)\}\}/g, '<span class="lowc" title="Проверьте это слово">$1</span>').replace(/\^\^([^^]+)\^\^/g, '<span class="hw">$1</span>').replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>").replace(/\n/g, "<br>"); }
 const ALIGNS = ["left","center","right","justify"];
 
 function renderBlocks(blocks, pageIdx, target){
@@ -659,7 +724,7 @@ function analyzeBlock(src, b){
 function textWidth100(t, font, boldAll){
   // width at 100px, bold segments (**…**) measured bold
   let w = 0; const parts = String(t).split(/(\*\*[^*]+\*\*)/);
-  for (const p of parts) { if (!p) continue; const bold = boldAll || /^\*\*.*\*\*$/.test(p); const txt = p.replace(/\*\*/g, "").replace(/\^\^/g, "");
+  for (const p of parts) { if (!p) continue; const bold = boldAll || /^\*\*.*\*\*$/.test(p); const txt = p.replace(/\*\*/g, "").replace(/\^\^/g, "").replace(/\{\{\?|\}\}/g, "");
     mctx.font = (bold ? "bold " : "") + "100px " + (FONT_CSS[font] || FONT_CSS.serif); w += mctx.measureText(txt).width; }
   return Math.max(1, w);
 }
@@ -697,6 +762,14 @@ const ASC = { serif: [0.891, 0.216, 0.662], sans: [0.905, 0.212, 0.716], mono: [
 /* give blocks of the same look one font size (measurement noise is a few %) */
 function unifySizes(list){
   const t = list.filter(b => b._fs > 0 && (b.type === "paragraph" || b.type === "heading"));
+  // sanity: a block far outside the page's usual size is a measurement error -> pull it back (from the letter height when known)
+  const allFs = t.map(b => b._fs).sort((a, z) => a - z), medFs = allFs[Math.floor(allFs.length / 2)] || 11;
+  for (const b of t) {
+    let fs = b._fs;
+    if (b._hF) { const fromH = b._hF * 841.89 / 0.95; if (fs > fromH * 1.35 || fs < fromH * 0.65) fs = fromH; }
+    fs = Math.max(medFs * 0.55, Math.min(medFs * 2.2, fs));
+    if (fs !== b._fs) { b._lh = b._lh * fs / b._fs; b._fs = fs; }
+  }
   const keyOf = b => (b.font || "serif") + (b.type === "heading" || b.bold ? "B" : "");
   const groups = {}; for (const b of t) (groups[keyOf(b)] = groups[keyOf(b)] || []).push(b);
   for (const g of Object.values(groups)) {
