@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Фото → Word: восстановить документ по фото или скану в редактируемый Word (.docx) онлайн</title>
+<meta name="description" content="Бесплатный онлайн-сервис: загрузите фото или скан листа — получите редактируемый Word (.docx) с теми же таблицами, бланком, графиками и расположением текста. Відновлення документа з фото у Word.">
+<meta name="keywords" content="фото в word, скан в word, распознать документ, восстановить документ по фото, OCR таблицы, фото в docx, відновити документ з фото, фото у ворд, розпізнавання тексту">
+<meta name="robots" content="index,follow">
+<link rel="canonical" href="https://dikins388.github.io/photo-to-word/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Фото → Word: документ с фото в редактируемый .docx">
+<meta property="og:description" content="Таблицы, бланк, графики и расположение текста как в оригинале — а текст редактируется.">
+<meta property="og:url" content="https://dikins388.github.io/photo-to-word/">
+<meta property="og:locale" content="ru_RU"><meta property="og:locale:alternate" content="uk_UA">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231f6f5c'/%3E%3Cpath d='M18 14h20l10 10v26H18z' fill='%23fff'/%3E%3Cpath d='M23 34h18M23 40h18M23 28h10' stroke='%231f6f5c' stroke-width='3'/%3E%3C/svg%3E">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Фото → Word","url":"https://dikins388.github.io/photo-to-word/","applicationCategory":"BusinessApplication","operatingSystem":"Any (браузер)","inLanguage":["ru","uk"],"description":"Восстановление документа по фото или скану в редактируемый Word: текст, таблицы, бланк, графики и расположение элементов как в оригинале.","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef0ec; --panel:#fbfbf9; --ink:#1d2320; --muted:#68716c; --line:#d6dad4;
+  --acc:#1f6f5c; --acc-ink:#fff; --acc-soft:#dcebe5; --warn:#a4471f; --paper:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 "IBM Plex Sans",system-ui,sans-serif}
+header{display:flex;align-items:baseline;gap:14px;padding:16px 22px 10px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:18px;margin:0;font-weight:600;letter-spacing:-.01em}
+header .sub{color:var(--muted);font-size:13px}
+.app{display:grid;grid-template-columns:330px 1fr;height:calc(100vh - 52px)}
+body.cmp .app{grid-template-columns:1fr}
+body.cmp.side .app{grid-template-columns:330px 1fr}
+body.cmp:not(.side) aside{display:none}
+aside{overflow:auto;border-right:1px solid var(--line);background:var(--panel);padding:16px;display:flex;flex-direction:column;gap:14px}
+.step{font:500 11px "IBM Plex Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.drop{display:block;border:1.5px dashed #b8bfb7;border-radius:10px;padding:18px 12px;text-align:center;cursor:pointer;color:var(--muted);background:#fff;transition:.15s}
+.drop:hover,.drop.over{border-color:var(--acc);color:var(--acc);background:var(--acc-soft)}
+.drop b{display:block;color:var(--ink);font-weight:500;margin-bottom:2px}
+.thumbs{display:flex;flex-direction:column;gap:8px}
+.thumb{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px}
+.thumb canvas{width:64px;height:80px;object-fit:contain;background:#f3f3f1;border-radius:4px}
+.thumb .meta{font-size:12px;color:var(--muted);min-width:0}
+.thumb .meta div:first-child{color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.thumb .acts{display:flex;gap:4px;margin-top:4px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:7px;padding:6px 10px}
+button:hover{border-color:#a9b1a8}
+button:disabled{opacity:.45;cursor:not-allowed}
+button.primary{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:500;padding:10px 12px;width:100%}
+button.primary:hover{filter:brightness(1.07)}
+button.sm{padding:3px 7px;font-size:12px}
+.status{font-size:13px;color:var(--muted);min-height:20px;white-space:pre-wrap}
+.status.err{color:var(--warn)}
+.bar{height:4px;background:var(--line);border-radius:4px;overflow:hidden;display:none}
+.bar i{display:block;height:100%;width:30%;background:var(--acc);animation:slide 1.2s infinite ease-in-out}
+@keyframes slide{0%{margin-left:-30%}100%{margin-left:100%}}
+.opt{display:flex;gap:7px;align-items:center;font-size:13px;margin:0 0 7px;cursor:pointer}
+.opt input{accent-color:var(--acc)}
+.about h2{font-size:14px;margin:0 0 4px}.about h3{font-size:13px;margin:8px 0 2px}.about p{font-size:12.5px;color:var(--muted);margin:0}
+.note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
+main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.work{flex:1;min-height:0;display:grid;grid-template-columns:1fr}
+body.cmp .work{grid-template-columns:1fr 1fr}
+.pane{display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--line)}
+.pane .ph{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:7px 12px;background:var(--panel);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.pane .ph b{color:var(--ink);font-weight:600;margin-right:4px}
+.pane .ph button{padding:3px 9px;font-size:12.5px}
+.pane .ph button.on{background:var(--acc-soft);border-color:var(--acc);color:var(--ink)}
+.pane .ph .grow{flex:1}
+.left{display:none} body.cmp .left{display:flex}
+.lscroll{flex:1;overflow:auto;padding:16px;background:#e3e6e1}
+.lscroll img.orig{display:block;margin:0 auto 14px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 8px 24px rgba(0,0,0,.08);background:#fff}
+.paper.ro .ia{display:none!important}
+.paper.ro{cursor:default}
+body.showdiff .diff:not(table){background:#fff1a8!important;box-shadow:inset 0 0 0 1px #e2c447}
+body.showdiff .paper.ro .diff:not(table){background:#ffd9cc!important;box-shadow:inset 0 0 0 1px #e59a80}
+body.showdiff table.diff{outline:2px dashed #d08a2a;outline-offset:3px}
+.cmpbtn.on{background:var(--acc-soft);border-color:var(--acc)}
+.toolbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.toolbar .sep{width:1px;height:22px;background:var(--line);margin:0 4px}
+.toolbar .grow{flex:1}
+.toolbar .grp{display:flex;flex-wrap:wrap;gap:4px;align-items:center;padding-right:8px;margin-right:4px;border-right:1px solid var(--line)}
+.toolbar .gl{font:500 10px "IBM Plex Mono",monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+.toolbar button{padding:5px 8px;font-size:13px}
+.toolbar button.on{background:var(--acc-soft);border-color:var(--acc)}
+.toolbar .exp{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:500}
+.stage{flex:1;padding:26px 16px 60px;overflow:auto;min-height:0}
+.paper{background:var(--paper);width:794px;max-width:none;min-height:1000px;margin:0 auto;padding:46px 52px;box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 30px rgba(0,0,0,.07);font:13.3px/1.35 Arial,Helvetica,sans-serif;color:#000;outline:none}
+.paper:empty::before{content:"Здесь появится распознанный документ. Его можно будет редактировать прямо на странице.";color:#9aa29c;font-family:"IBM Plex Sans",sans-serif}
+.paper h1,.paper h2,.paper h3{margin:12px 0 6px;font-weight:700}
+.paper h1{font-size:21px}.paper h2{font-size:17px}.paper h3{font-size:14.6px}
+.paper .rule{border-bottom:1.5px solid #000;padding-bottom:2px}
+.paper p{margin:0 0 6px;min-height:1em}
+.paper table{width:100%;border-collapse:collapse;margin:4px 0 10px;table-layout:fixed}
+.paper td{padding:2px 5px;height:1.6em;vertical-align:middle;word-wrap:break-word}
+.paper table.b-all td{border:1px solid #808080}
+.paper table.b-horizontal tr:first-child td{border-top:1px solid #808080}
+.paper table.b-horizontal tr.head:last-of-type td,.paper table.b-horizontal tr:last-child td{border-bottom:1px solid #808080}
+.paper table.b-none td{border:1px dotted transparent}
+.paper:hover table.b-none td{border-color:#e3e3e3}
+.paper tr.head td{font-weight:700}
+.paper td.sel{background:#e6f1ec}
+.paper.layout{width:auto;padding:0;background:transparent;box-shadow:none;min-height:0}
+.paper.layout:empty::before{display:none}
+.lpage{position:relative;width:794px;height:1123px;margin:0 auto 26px;background:#fff center/100% 100% no-repeat;box-shadow:0 1px 2px rgba(0,0,0,.06),0 8px 30px rgba(0,0,0,.09);overflow:hidden}
+.lpage .lb{position:absolute;outline:none;white-space:pre-wrap;font-family:"Times New Roman",Times,"Liberation Serif",serif;color:#000;cursor:text}
+.lpage .lb[data-font="sans"]{font-family:Arial,"Liberation Sans",Helvetica,sans-serif}
+.lpage .lb[data-font="mono"]{font-family:"Courier New","Liberation Mono",monospace}
+.lpage .lb:hover{box-shadow:0 0 0 1px rgba(31,111,92,.35)}
+.lpage .lb:focus-within{box-shadow:0 0 0 1.5px rgba(31,111,92,.8)}
+.paper .lpage .lb > *{margin:0!important;padding:0;font:inherit;line-height:inherit;min-height:0}
+.paper .lpage .lb h1,.paper .lpage .lb h2,.paper .lpage .lb h3{font-weight:700}
+.paper .lpage .lb table{width:100%;table-layout:fixed;border-collapse:collapse}
+.paper .lpage .lb td{height:auto;padding:0 3px;line-height:1.1}
+body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
+.paper .hw{color:#1f3a93;font-style:italic}
+.paper hr.cut{border-top:1.5px dashed #999}
+.paper hr{border:0;border-top:1.5px solid #000;margin:6px 0}
+.paper .pb{border-top:2px dashed #c7cdc6;margin:22px -52px;position:relative;height:0}
+.paper .pb::after{content:"разрыв страницы";position:absolute;right:56px;top:-9px;background:#fff;padding:0 6px;font:11px "IBM Plex Mono",monospace;color:#9aa29c}
+.imgrow{margin:6px 0 8px}
+.imgrow figure{display:inline-block;position:relative;margin:0 6px 0 0;vertical-align:bottom}
+.imgrow img{display:block;max-width:100%}
+.imgrow figure .ia{position:absolute;top:4px;right:4px;display:none;gap:3px}
+.imgrow figure:hover .ia{display:flex}
+.imgrow figure:hover img{outline:2px solid var(--acc)}
+.ia button{padding:2px 6px;font:12px "IBM Plex Sans",sans-serif;background:rgba(255,255,255,.95)}
+/* crop modal */
+.modal{position:fixed;inset:0;background:rgba(20,26,23,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.open{display:flex}
+.mbox{background:var(--panel);border-radius:12px;padding:14px;max-width:min(980px,96vw);max-height:96vh;display:flex;flex-direction:column;gap:10px}
+.mbox .cropwrap{position:relative;overflow:auto;max-height:76vh;cursor:crosshair;user-select:none;touch-action:none}
+.mbox .cropwrap canvas{display:block;max-width:100%;max-height:74vh;width:auto;height:auto;margin:0 auto}
+.mbox .rect{position:absolute;border:2px solid var(--acc);background:rgba(31,111,92,.12);pointer-events:none}
+.mbox .row{display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.mbox .row .hint{margin-right:auto;color:var(--muted);font-size:13px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 14px;border-radius:8px;font-size:13px;display:none;z-index:60}
+@media (max-width:860px){.app{grid-template-columns:1fr;height:auto}body.cmp .work{grid-template-columns:1fr}.work{display:block}aside{border-right:0;border-bottom:1px solid var(--line)}.paper{padding:24px 18px}.paper .pb{margin:22px -18px}}
+</style>
+</head>
+<body>
+<header><h1>Фото → Word</h1><span class="sub">восстановление сканов и фотографий документов: текст, таблицы, графики, печати</span></header>
+<div class="app">
+  <aside>
+    <div>
+      <div class="step">1 · Фото страниц</div>
+      <label class="drop" id="drop"><b>Выберите или перетащите фото</b>JPG, PNG, WebP · можно несколько страниц
+        <input type="file" id="file" accept="image/*" multiple hidden></label>
+    </div>
+    <div class="thumbs" id="thumbs"></div>
+    <div id="apiBox" hidden>
+      <div class="step">Ключ API Anthropic</div>
+      <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-…" style="width:100%;padding:8px;font:inherit;border:1px solid var(--line);border-radius:7px">
+      <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+        <select id="apiModel" style="flex:1;padding:6px;font:inherit;border:1px solid var(--line);border-radius:7px">
+          <option value="claude-sonnet-5-5">Claude Sonnet 5.5 (быстрее, дешевле)</option>
+          <option value="claude-opus-5-5">Claude Opus 5.5 (точнее)</option>
+        </select>
+      </div>
+      <label class="opt" style="margin-top:6px"><input type="checkbox" id="apiRemember"> запомнить ключ в этом браузере</label>
+      <div class="status" style="font-size:12px">Ключ получают на <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>; распознавание оплачивается с вашего аккаунта API. Ключ и фото уходят напрямую из вашего браузера в Anthropic, этот сайт их не хранит и никуда больше не отправляет.</div>
+    </div>
+    <div>
+      <div class="step">2 · Распознавание</div>
+      <label class="opt"><input type="checkbox" id="optLayout" checked> Точная раскладка: фон бланка и места блоков как в оригинале</label>
+      <label class="opt" style="padding-left:22px"><input type="checkbox" id="optBreaks" checked> переносы строк как в оригинале</label>
+      <label class="opt"><input type="checkbox" id="optSkip" checked> Пропускать печати и подписи</label>
+      <label class="opt"><input type="checkbox" id="optCharts" checked> Перерисовывать графики начисто</label>
+      <label class="opt"><input type="checkbox" id="optVerify" checked> Сверять таблицы вторым проходом (точнее, но дольше)</label>
+      <label class="opt"><input type="checkbox" id="optHand"> Распознавать рукописный текст</label>
+      <button class="primary" id="go" disabled>Распознать и собрать документ</button>
+      <div style="display:flex;gap:6px;margin-top:6px"><button class="sm" id="stop" hidden>Остановить</button></div>
+      <div class="bar" id="bar"><i></i></div>
+      <div class="status" id="status"></div>
+    </div>
+    <div>
+      <div class="step">3 · Правка и экспорт</div>
+      <div class="status">Правьте текст прямо в листе. Для таблиц поставьте курсор в ячейку и используйте кнопки «Таблица»: строки, столбцы, объединение, ширина, рамки. У картинки при наведении: ⇄ график/фото (или распознать график), ✎ данные графика, ◐ белый фон, ✂ другая область, −/+ размер.</div>
+    </div>
+    <section class="about">
+      <h2>Что умеет сервис</h2>
+      <p>Восстанавливает документ по фото или скану в редактируемый Word (.docx): текст, таблицы с объединёнными ячейками, бланк, логотипы, рисунки и графики. В режиме точной раскладки бланк и рисунки остаются фоном как на оригинале, а весь текст стоит на тех же местах и редактируется.</p>
+      <h3>Как пользоваться</h3>
+      <p>Загрузите фото страниц, нажмите «Распознать», сверьте результат с оригиналом в режиме сравнения, поправьте и скачайте .docx.</p>
+      <h3>Українською</h3>
+      <p>Відновлення документа з фото або скану у редагований Word: таблиці, бланк, графіки та розташування тексту як в оригіналі.</p>
+    </section>
+    <div class="note">Фото отправляются в Claude только для распознавания. Результат стоит сверить с оригиналом, особенно цифры: на мелком или смазанном тексте модель может ошибаться, непрочитанное помечается [?].</div>
+  </aside>
+  <main>
+    <div class="toolbar" id="tb">
+      <div class="grp"><span class="gl">Текст</span>
+        <button data-cmd="bold" title="Жирный"><b>Ж</b></button>
+        <button data-cmd="italic" title="Курсив"><i>К</i></button>
+        <button data-cmd="underline" title="Подчёркнутый"><u>Ч</u></button>
+        <button id="fMinus" title="Шрифт меньше">A−</button>
+        <button id="fPlus" title="Шрифт больше">A+</button>
+        <button id="hBtn" title="Сделать заголовком">Заголовок</button>
+        <button id="pBtn" title="Сделать обычным текстом">Абзац</button>
+        <button id="ruleBtn" title="Линия под заголовком вкл/выкл">З̲</button>
+        <button data-cmd="justifyLeft" title="Влево">⯇</button>
+        <button data-cmd="justifyCenter" title="По центру">≡</button>
+        <button data-cmd="justifyRight" title="Вправо">⯈</button>
+        <button data-cmd="justifyFull" title="По ширине">☰</button>
+      </div>
+      <div class="grp"><span class="gl">Таблица</span>
+        <button id="tblBtn" title="Вставить новую таблицу">⊞ новая</button>
+        <button id="rowAdd" title="Строка ниже">+стр</button>
+        <button id="rowDel" title="Удалить строку">−стр</button>
+        <button id="colAdd" title="Столбец справа">+стлб</button>
+        <button id="colDel" title="Удалить столбец">−стлб</button>
+        <button id="mergeR" title="Объединить с ячейкой справа">⇥ объед.</button>
+        <button id="mergeD" title="Объединить с ячейкой снизу">⤓ объед.</button>
+        <button id="splitC" title="Разъединить ячейку">разъед.</button>
+        <button id="colNarrow" title="Столбец уже">↔−</button>
+        <button id="colWide" title="Столбец шире">↔+</button>
+        <button id="vAlign" title="Выравнивание по вертикали: центр / верх / низ">⇕</button>
+        <button id="headRow" title="Строка шапки (жирная, повторяется)">шапка</button>
+        <button id="bordersBtn" title="Границы: все / горизонтальные / нет">рамки</button>
+      </div>
+      <div class="grp"><span class="gl">Вставка</span>
+        <button id="addImg" title="Вырезать фрагмент из фото (логотип, график, рисунок)">✂ из фото</button>
+        <button id="lineBtn" title="Горизонтальная линия">линия</button>
+        <button id="cutBtn" title="Линия отреза">- - отрез</button>
+        <button id="pbBtn" title="Разрыв страницы">разрыв стр.</button>
+      </div>
+      <span class="grow"></span>
+      <button id="cmpBtn" class="cmpbtn" title="Оригинал и результат рядом">◫ Сравнение</button>
+      <button id="sideBtn" title="Показать/скрыть левую панель с фото и настройками">☰ Панель</button>
+      <button id="copyBtn" title="Скопировать с форматированием, чтобы вставить в Word">Копировать</button>
+      <button id="dlBtn" class="exp">Скачать .docx</button>
+    </div>
+    <div class="work">
+      <div class="pane left">
+        <div class="ph"><b>Слева</b>
+          <button id="lvPhoto" class="on">Фото оригинала</button>
+          <button id="lvFirst" title="Результат до второй проверки">До сверки</button>
+          <span class="grow"></span>
+          <button id="zOut" title="Уменьшить">−</button><span id="zLbl">100%</span><button id="zIn" title="Увеличить">+</button>
+        </div>
+        <div class="lscroll" id="lscroll"></div>
+      </div>
+      <div class="pane">
+        <div class="ph"><b>Результат</b> редактируется
+          <span class="grow"></span>
+          <label class="opt" style="margin:0"><input type="checkbox" id="syncScroll" checked> синхронная прокрутка</label>
+          <label class="opt" style="margin:0" id="diffLbl"><input type="checkbox" id="showDiff" checked> подсветить отличия</label>
+        </div>
+        <div class="stage" id="stage"><div class="paper" id="paper" contenteditable="true" spellcheck="false"></div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="modal"><div class="mbox">
+  <div class="row"><span class="hint" id="mhint">Выделите мышью область на фото</span>
+    <select id="mpage"></select></div>
+  <div class="cropwrap" id="cropwrap"><canvas id="mcanvas"></canvas><div class="rect" id="mrect" hidden></div></div>
+  <div class="row"><button id="mcancel">Отмена</button><button id="mok" class="exp" style="background:var(--acc);color:#fff;border-color:var(--acc)">Применить</button></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script src="docx.iife.js"></script>
+<script src="builder.js"></script>
+<script src="chart.js"></script>
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const paper = $("#paper"); window.paperEl = paper; const statusEl = $("#status"), bar = $("#bar");
+const pages = [];   // {name, canvas}
+let sampleFn = null, downloads = null, imgLimit = 0, ctl = null;
+
+function toast(t){ const el=$("#toast"); el.textContent=t; el.style.display="block"; clearTimeout(toast._t); toast._t=setTimeout(()=>el.style.display="none",2600); }
+function setStatus(t, err){ statusEl.textContent=t||""; statusEl.classList.toggle("err",!!err); }
+
+/* ---------- capabilities ---------- */
+// Inside Claude the page asks Claude through the viewer's account. Anywhere else (GitHub Pages etc.)
+// the visitor uses their own Anthropic API key, sent straight from their browser to api.anthropic.com.
+const hasClaude = typeof window.claude !== "undefined" && window.claude && typeof window.claude.use === "function";
+const LS = { get(k){ try { return localStorage.getItem(k); } catch { return null; } }, set(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} } };
+const AI = {
+  mode: hasClaude ? "claude" : "api",
+  ready(){ return this.mode === "claude" ? !!(sampleFn && imgLimit) : !!this.key(); },
+  key(){ return ($("#apiKey") && $("#apiKey").value.trim()) || ""; },
+  model(){ return ($("#apiModel") && $("#apiModel").value) || "claude-sonnet-5-5"; },
+  async json(prompt, opts){
+    if (this.mode === "claude") return sampleFn.json(prompt, opts);
+    return apiJson(prompt, opts || {});
+  }
+};
+function blobToB64(blob){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); }); }
+async function shrinkForApi(blob){
+  // the API works best with images up to ~1568 px on the long side
+  const bmp = await createImageBitmap(blob); const k = Math.min(1, 1568 / Math.max(bmp.width, bmp.height));
+  const c = document.createElement("canvas"); c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height); return new Promise(r => c.toBlob(r, "image/jpeg", 0.9));
+}
+function parseJsonLoose(text){
+  const t = String(text || "").trim();
+  try { return JSON.parse(t); } catch {}
+  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/); if (fence) { try { return JSON.parse(fence[1]); } catch {} }
+  const i = Math.min(...["{", "["].map(ch => { const k = t.indexOf(ch); return k < 0 ? Infinity : k; }));
+  const j = Math.max(t.lastIndexOf("}"), t.lastIndexOf("]"));
+  if (isFinite(i) && j > i) { try { return JSON.parse(t.slice(i, j + 1)); } catch {} }
+  throw { code: "invalid_json", message: "no JSON in reply", text: t };
+}
+async function apiJson(prompt, opts){
+  const key = AI.key(); if (!key) throw { code: "no_key", message: "API key missing" };
+  const imgs = opts.images ? (Array.isArray(opts.images) ? opts.images : [opts.images]) : [];
+  const content = [];
+  for (const b of imgs) { const sb = await shrinkForApi(b); content.push({ type: "image", source: { type: "base64", media_type: "image/jpeg", data: await blobToB64(sb) } }); }
+  content.push({ type: "text", text: prompt + "\n\nReply with the JSON only, no commentary." });
+  let r;
+  try {
+    r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", signal: opts.signal,
+      headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01", "anthropic-dangerous-direct-browser-access": "true" },
+      body: JSON.stringify({ model: AI.model(), max_tokens: 16000, messages: [{ role: "user", content }] }) });
+  } catch (e) { if (e && e.name === "AbortError") throw { code: "cancelled" }; throw { code: "network", message: String(e && e.message || e) }; }
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) {
+    const m = (data && data.error && data.error.message) || ("HTTP " + r.status);
+    throw { code: r.status === 401 ? "bad_key" : r.status === 429 || r.status === 529 ? "rate_limited" : r.status === 400 && /credit|balance/i.test(m) ? "no_credit" : "api_error", message: m };
+  }
+  const text = (data.content || []).filter(c => c.type === "text").map(c => c.text).join("");
+  if (opts.onText) try { opts.onText({ text, delta: text }); } catch {}
+  return parseJsonLoose(text);
+}
+(async () => {
+  if (hasClaude) {
+    try { sampleFn = await claude.use("sample"); } catch { sampleFn = null; }
+    try { downloads = await claude.use("downloads"); } catch { downloads = null; }
+    if (sampleFn) { try { const l = await sampleFn.limits(); imgLimit = l.images ? l.images.maxCount : 0; } catch { imgLimit = 0; } }
+    if (!sampleFn || !imgLimit) { AI.mode = "api"; }
+  }
+  if (AI.mode === "api") {
+    imgLimit = 3; $("#apiBox").hidden = false;
+    const saved = LS.get("p2w_key"); if (saved) { $("#apiKey").value = saved; $("#apiRemember").checked = true; }
+    const m = LS.get("p2w_model"); if (m) $("#apiModel").value = m;
+    $("#apiKey").addEventListener("input", () => { if ($("#apiRemember").checked) LS.set("p2w_key", AI.key() || null); refreshGo(); });
+    $("#apiRemember").addEventListener("change", e => LS.set("p2w_key", e.target.checked ? (AI.key() || null) : null));
+    $("#apiModel").addEventListener("change", e => LS.set("p2w_model", e.target.value));
+    if (!AI.key()) setStatus("Введите свой ключ API Anthropic выше, чтобы распознавать фото.");
+  }
+  refreshGo();
+})();
+
+/* ---------- loading photos ---------- */
+const MAXSIDE = 2600;
+function loadFile(file){
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file); const im = new Image();
+    im.onload = () => { const k = Math.min(1, MAXSIDE / Math.max(im.naturalWidth, im.naturalHeight));
+      const c = document.createElement("canvas"); c.width = Math.round(im.naturalWidth*k); c.height = Math.round(im.naturalHeight*k);
+      c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(url); res(c); };
+    im.onerror = () => { URL.revokeObjectURL(url); rej(new Error("не удалось открыть " + file.name)); };
+    im.src = url;
+  });
+}
+function rotate(c, dir){
+  const r = document.createElement("canvas"); r.width = c.height; r.height = c.width;
+  const g = r.getContext("2d"); g.translate(r.width/2, r.height/2); g.rotate(dir*Math.PI/2); g.drawImage(c, -c.width/2, -c.height/2); return r;
+}
+async function addFiles(list){
+  for (const f of list) { if (!f.type.startsWith("image/")) continue;
+    try { pages.push({ name: f.name, canvas: await loadFile(f) }); } catch(e){ setStatus(e.message, true); } }
+  renderThumbs(); refreshGo();
+}
+function renderThumbs(){
+  const box = $("#thumbs"); box.innerHTML = "";
+  pages.forEach((p, i) => {
+    const d = document.createElement("div"); d.className = "thumb";
+    const t = document.createElement("canvas"); t.width = 128; t.height = 160;
+    const g = t.getContext("2d"); g.fillStyle="#f3f3f1"; g.fillRect(0,0,128,160);
+    const k = Math.min(128/p.canvas.width, 160/p.canvas.height), w = p.canvas.width*k, h = p.canvas.height*k;
+    g.drawImage(p.canvas, (128-w)/2, (160-h)/2, w, h);
+    const m = document.createElement("div"); m.className = "meta";
+    m.innerHTML = `<div>Стр. ${i+1} · ${escapeHtml(p.name)}</div><div>${p.canvas.width}×${p.canvas.height}</div>`;
+    const a = document.createElement("div"); a.className = "acts";
+    const mk = (txt, fn, title) => { const b = document.createElement("button"); b.className="sm"; b.textContent=txt; b.title=title; b.onclick=fn; a.append(b); };
+    mk("↺", () => { p.canvas = rotate(p.canvas, -1); renderThumbs(); }, "Повернуть влево");
+    mk("↻", () => { p.canvas = rotate(p.canvas, 1); renderThumbs(); }, "Повернуть вправо");
+    if (i>0) mk("↑", () => { pages.splice(i-1, 0, pages.splice(i,1)[0]); renderThumbs(); }, "Выше");
+    mk("✕", () => { pages.splice(i,1); renderThumbs(); refreshGo(); }, "Убрать");
+    m.append(a); d.append(t, m); box.append(d);
+  });
+}
+function refreshGo(){ $("#go").disabled = !pages.length || !AI.ready() || !!ctl; }
+const drop = $("#drop"), fileIn = $("#file");
+fileIn.onchange = () => { addFiles([...fileIn.files]); fileIn.value = ""; };
+["dragenter","dragover"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.add("over"); }));
+["dragleave","drop"].forEach(e => drop.addEventListener(e, ev => { ev.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", ev => addFiles([...ev.dataTransfer.files]));
+
+/* ---------- recognition ---------- */
+function cropCanvas(c, x0, y0, x1, y1){
+  const W = c.width, H = c.height; const sx = Math.max(0, Math.round(x0*W)), sy = Math.max(0, Math.round(y0*H));
+  const sw = Math.max(2, Math.min(W, Math.round(x1*W)) - sx), sh = Math.max(2, Math.min(H, Math.round(y1*H)) - sy);
+  const o = document.createElement("canvas"); o.width = sw; o.height = sh; o.getContext("2d").drawImage(c, sx, sy, sw, sh, 0, 0, sw, sh); return o;
+}
+const toBlob = (c, type="image/jpeg", q=0.92) => new Promise(r => c.toBlob(r, type, q));
+
+const PROMPT = `You are reconstructing a photographed or scanned document page as an editable document.
+Image 1 is the WHOLE page. Any further images are zoomed crops of the same page for reading small print:
+Image 2 = top part (0%–55% of the page height), Image 3 = bottom part (45%–100%). Read details from the crops, but ALL coordinates refer to Image 1.
+
+Rules:
+- Transcribe ALL printed text exactly as it appears: same language and alphabet, spelling, punctuation and spacing quirks, decimal separators (keep "," or "." exactly as printed), units, asterisks, codes. Never translate, correct, summarize, reorder or invent anything. If something is unreadable write [?].
+- Follow the reading order top to bottom. Text that sits side by side (label/value forms, two columns, signature lines) goes into a table with "borders":"none".
+- Tables must match the original EXACTLY: before writing, count the columns and rows on the photo and find every merged box. Reproduce the same number of rows and columns, the same merged cells (colspan/rowspan), the same header structure, the same order, and column widths proportional to the photo. Every row must cover the same number of grid columns. Keep empty cells as "".
+- Anything that is not text (charts, graphs, logos, stamps, seals, signatures, photos, QR/bar codes, drawings) becomes an "images" item with a tight bbox around it, including its axes and labels.
+- Small icons or decorations can be skipped.
+{{HAND}}
+- Ignore text showing through from the back side of the sheet (faint or mirrored writing), shadows, folds, fingers and anything outside the paper.
+- Printed forms: keep every printed label, including empty fields, and render blank lines as "______". A form drawn as a grid of boxes is ONE table with "borders":"all"; reproduce merged boxes with colspan and rowspan (e.g. a side label like "Касир" spanning many rows is one cell with rowspan). In later rows OMIT the cells covered by a rowspan, exactly as in HTML. Empty boxes stay as "".
+- If a sheet contains the same form twice (e.g. notice + receipt / tear-off part), reproduce both copies and put {"type":"cut"} between them.
+{{LAYOUT}}
+{{SKIP}}
+{{CHARTS}}
+- Logos and emblems: an "images" item with label "logo" and a tight bbox (they are cut out of the photo, not redrawn).
+
+Reply with ONLY a JSON object: {"blocks":[ ... ]} where each block is one of:
+{"type":"heading","text":"...","level":1|2|3,"align":"left|center|right","rule":true|false}   (rule = a horizontal line under the heading)
+{"type":"paragraph","text":"plain text, **bold part**, *italic part*","align":"left|center|right|justify","size":10,"italic":false}   (size in pt, optional; ~10 is normal body text)
+{"type":"table","borders":"all|none|horizontal","header":1,"widths":[2,1,1],"rows":[["cell", {"text":"cell","bold":true,"align":"center","valign":"top","colspan":2,"rowspan":1}]]}   (cell text may contain \n for line breaks; widths = relative column widths as measured on the photo)
+{"type":"images","align":"left|center|right","items":[{"bbox":[x0,y0,x1,y1],"w":40,"label":"chart|logo|stamp|signature|photo|diagram|code"}]}   (bbox = fractions 0..1 of Image 1; w = width as % of the page width; graphics standing side by side go in one block)
+{"type":"line"}
+{"type":"cut"}   (tear-off / cut line)
+{{CHARTSPEC}}Example: {"blocks":[{"type":"heading","text":"ACT No 5","level":1,"align":"center","rule":false},{"type":"table","borders":"none","header":0,"widths":[1,2],"rows":[["Date","12.03.2024"]]}]}`;
+
+const LAYOUT_RULES = `- EXACT LAYOUT MODE. The page is rebuilt in two layers: a picture layer (everything that is not text, taken from the photo as it is) and an editable text layer on top. So:
+  * Output EVERY piece of printed text as a block, including headers, footers, addresses, phones, small print, signature labels — wherever it stands.
+  * Do NOT output any block for graphics: logos, emblems, drawings and illustrations, anatomical pictures, charts, photos, stamps, signatures, QR/bar codes, decorative bars, ruling lines, frames, watermarks. They stay in the picture layer untouched. Text that is part of a graphic (lettering inside a logo, chart axis labels, words inside a drawing) belongs to the graphic: do not output it.
+  * Every block MUST have "bbox":[x0,y0,x1,y1] = fractions (0..1) of Image 1, tight around the block's printed ink (top of the first line's letters to the bottom of the last line, leftmost to rightmost character).
+  * One block per visually separate text group. Columns that stand side by side are separate blocks (they may overlap vertically). A blank vertical gap starts a new block. Words on one line separated by a wide gap stay in one block, with the spaces kept (e.g. "Відділення ОКЛ: Гастро        вік: 28 років").
+  * Paragraph and heading blocks give "lines" (number of printed lines), "font": "sans" for letters without serifs (Arial, Calibri, Myriad, Helvetica…) or "serif" for Times-like letters, "align", and "bold": true when the whole block is bold; bold words inside a block are written as **word**.
+  * Tables: a "table" block with bbox around the whole table (including its grid lines), widths measured on the photo, "font" and "size" (pt).`;
+const HAND_OFF = `- Handwriting: do NOT transcribe anything written by hand (filled-in names, addresses, numbers, dates, sums, ticks, notes). Leave those fields exactly as on a blank form: keep the printed labels, blank lines "______" and empty table cells. Do not make image items for handwriting.`;
+const HAND_ON = `- Handwritten entries (filled-in names, numbers, dates, amounts) are transcribed too and wrapped in ^^...^^, e.g. "Прізвище ^^Іванова А.І^^". Printed text stays unwrapped.`;
+const VERIFY = `You are checking a reconstruction of the document page in the images (Image 1 = whole page, further images = zoomed top and bottom parts; coordinates refer to Image 1).
+Below is the reconstruction as JSON in the format described after it. Compare it with the page carefully, block by block, and fix every difference:
+- tables: number of rows and columns, merged cells (colspan/rowspan; cells covered by a rowspan are omitted in later rows), header structure, column width proportions, cell text, alignment, borders;
+- missing or extra text, wrong characters or digits, wrong order, wrong bold;
+- image bboxes that are off (they must tightly frame the graphic).
+Keep everything that is already right unchanged. Follow the same rules the reconstruction was made with:
+{{RULES}}
+Reply with ONLY the corrected full JSON object {"blocks":[...]}, same format.
+
+FORMAT:
+{{FORMAT}}
+
+RECONSTRUCTION:
+`;
+const CHARTSPEC = `Chart items additionally carry "chart":
+{"aspect":plot width/height,"corner":"small corner text like PRE or null","grid":false,
+ "x":{"min":0,"max":8,"step":1,"label":"axis title as printed or null","ticks":true|false (false if no tick numbers are printed)},
+ "y":{"min":0,"max":8,"step":1,"label":"...","ticks":true},
+ "series":[{"points":[[x,y],...],"color":"#3c3c3c","width":1.8,"dash":false}],   (darker/thicker = main curve; use greys as in the original unless it is colored)
+ "areas":[{"points":[[x,y],...],"color":"#999999","opacity":0.35}],   (shaded regions, polygon)
+ "markers":[{"x":1,"y":2.8,"shape":"circle|square","fill":false}],
+ "hlines":[{"y":0,"color":"#000","width":1.4}], "vlines":[],
+ "legendPos":"bottom|right|top","legend":[{"text":"as printed","shape":"line|circle|area","color":"#b5b5b5"}]}
+`;
+$("#go").onclick = recognize;
+$("#stop").onclick = () => ctl && ctl.abort();
+
+async function recognize(){
+  if (!pages.length || !AI.ready()) return;
+  if (paper.textContent.trim() && !await confirmInline("Заменить текущий документ новым результатом?")) return;
+  paper.innerHTML = ""; paper.classList.remove("layout"); firstPass = []; ctl = new AbortController(); refreshGo();
+  $("#stop").hidden = false; bar.style.display = "block";
+  try {
+    for (let i = 0; i < pages.length; i++) {
+      const p = pages[i]; const t0 = Date.now();
+      const tick = setInterval(() => setStatus(`Страница ${i+1} из ${pages.length}: распознаю… ${Math.round((Date.now()-t0)/1000)} с`), 500);
+      const imgs = [await toBlob(p.canvas)];
+      if (imgLimit >= 3) { imgs.push(await toBlob(cropCanvas(p.canvas, 0, 0, 1, .55))); imgs.push(await toBlob(cropCanvas(p.canvas, 0, .45, 1, 1))); }
+      const prompt = PROMPT
+        .replace("{{HAND}}", $("#optHand").checked ? HAND_ON : HAND_OFF)
+        .replace("{{LAYOUT}}", $("#optLayout").checked ? LAYOUT_RULES + ($("#optBreaks").checked ? "\n  * Inside paragraph and heading text put \"\\n\" exactly where each printed line ends in the original (so the number of \\n-separated lines equals \"lines\"); keep end-of-line hyphens." : "") : "")
+        .replace("{{SKIP}}", $("#optSkip").checked ? "- Do NOT include stamps, seals or handwritten signatures at all (no image items for them). Printed text near them (e.g. \"Signature\", a name) is still transcribed." : "")
+        .replace("{{CHARTS}}", $("#optCharts").checked ? "- For every chart or graph also give a \"chart\" object (see below) so it can be redrawn cleanly: read the axis ranges and tick step from the axis labels, and trace every curve as 15-40 [x,y] points in DATA units, following the shape exactly as drawn. Do not idealize curves. Do not add titles or labels that are not printed." : "")
+        .replace("{{CHARTSPEC}}", $("#optCharts").checked ? CHARTSPEC : "");
+      let res;
+      try {
+        res = await AI.json(prompt, { images: imgs, modelTier: "complex", signal: ctl.signal,
+          onText: ({ text }) => { clearInterval(tick); setStatus(`Страница ${i+1} из ${pages.length}: получено ${text.length} символов…`); } });
+      } finally { clearInterval(tick); }
+      let blocks = Array.isArray(res) ? res : (res && res.blocks) || [];
+      firstPass[i] = blocks;
+      if ($("#optVerify").checked && blocks.length) {
+        const t1 = Date.now();
+        const tick2 = setInterval(() => setStatus(`Страница ${i+1} из ${pages.length}: сверяю таблицы и текст с фото… ${Math.round((Date.now()-t1)/1000)} с`), 500);
+        try {
+          const rules = prompt.slice(prompt.indexOf("Rules:"), prompt.indexOf("Reply with ONLY"));
+          const format = prompt.slice(prompt.indexOf("Reply with ONLY"));
+          const vp = VERIFY.replace("{{RULES}}", rules).replace("{{FORMAT}}", format) + JSON.stringify({ blocks });
+          const r2 = await AI.json(vp, { images: imgs, modelTier: "complex", signal: ctl.signal,
+            onText: ({ text }) => { clearInterval(tick2); setStatus(`Страница ${i+1} из ${pages.length}: сверка, получено ${text.length} символов…`); } });
+          const b2 = Array.isArray(r2) ? r2 : (r2 && r2.blocks);
+          if (Array.isArray(b2) && b2.length) blocks = b2;
+        } catch (e) {
+          if (e && e.code === "cancelled") throw e;
+          console.warn("verify failed", e);   // keep the first result
+        } finally { clearInterval(tick2); }
+      }
+      if ($("#optLayout").checked) fixBoxes(blocks);
+      const boxed = blocks.filter(b => b && okBox(b) && normBox(b)).length;
+      if ($("#optLayout").checked && boxed >= Math.max(1, blocks.length * 0.6)) { if (firstPass[i]) fixBoxes(firstPass[i]);
+        for (const b of blocks) if (b && !b.letterhead && (b.type === "paragraph" || b.type === "heading") && okBox(b)) { try { analyzeBlock(p.canvas, b); } catch (e) { console.warn(e); } }
+        if (firstPass[i]) for (const b of firstPass[i]) if (b && !b.letterhead && (b.type === "paragraph" || b.type === "heading") && okBox(b)) { try { analyzeBlock(p.canvas, b); } catch (e) {} }
+        paper.classList.add("layout"); p.layout = true;
+        setStatus(`Страница ${i+1} из ${pages.length}: готовлю фон бланка…`); await new Promise(r => setTimeout(r, 30));
+        p.bg = makeBackground(p.canvas, blocks).toDataURL("image/jpeg", 0.86);
+        renderLayoutPage(blocks, i, paper);
+      } else {
+        if (i > 0) paper.append(el("div", { class: "pb", contenteditable: "false" }));
+        renderBlocks(blocks, i);
+      }
+    }
+    setStatus("Готово. Слева оригинал, справа результат: сверьте и поправьте, затем скачайте .docx.");
+    openCompare();
+  } catch (e) {
+    const code = e && e.code;
+    const msg = { cancelled: "Остановлено.", not_granted: "Доступ к Claude не разрешён для этой страницы.",
+      rate_limited: "Слишком много запросов или исчерпан лимит. Попробуйте позже.", refused: "Claude отказался обрабатывать это изображение.",
+      invalid_json: "Ответ пришёл в неверном формате. Нажмите «Распознать» ещё раз.", image_rejected: "Изображение не принято: другой формат или слишком большой файл.",
+      session_expired: "Сессия истекла, войдите в Claude заново.",
+      bad_key: "Ключ API не подошёл. Проверьте его в console.anthropic.com.", no_credit: "На аккаунте API закончился баланс.",
+      no_key: "Введите ключ API.", network: "Нет связи с api.anthropic.com. Проверьте интернет.",
+      api_error: "Ошибка API" + (e && e.message ? ": " + e.message : "") }[code] || ("Ошибка распознавания" + (e && e.message ? ": " + e.message : "") + ". Попробуйте ещё раз.");
+    setStatus(msg, code !== "cancelled");
+  } finally { ctl = null; $("#stop").hidden = true; bar.style.display = "none"; refreshGo(); }
+}
+
+/* ---------- JSON -> editable HTML ---------- */
+function el(tag, attrs, html){ const e = document.createElement(tag); for (const k in (attrs||{})) if (attrs[k] != null) e.setAttribute(k, attrs[k]); if (html != null) e.innerHTML = html; return e; }
+function escapeHtml(s){ return String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function inlineMd(s){ return escapeHtml(s).replace(/\^\^([^^]+)\^\^/g, '<span class="hw">$1</span>').replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>").replace(/\n/g, "<br>"); }
+const ALIGNS = ["left","center","right","justify"];
+
+function renderBlocks(blocks, pageIdx, target){
+  const paper = target || window.paperEl;
+  for (const b of blocks) {
+    if (!b || typeof b !== "object") continue;
+    const align = ALIGNS.includes(b.align) ? b.align : null;
+    if (b.type === "heading") {
+      const lv = Math.min(3, Math.max(1, +b.level || 2));
+      const h = el("h" + lv, { class: b.rule ? "rule" : null }, inlineMd(b.text));
+      if (align) h.style.textAlign = align; paper.append(h);
+    } else if (b.type === "paragraph") {
+      const p = el("p", null, inlineMd(b.text));
+      if (align) p.style.textAlign = align;
+      if (b.size && +b.size > 4 && +b.size < 40) p.style.fontSize = (+b.size * 1.333).toFixed(1) + "px";
+      if (b.italic) p.style.fontStyle = "italic";
+      paper.append(p);
+    } else if (b.type === "table") {
+      paper.append(makeTable(b));
+    } else if (b.type === "images") {
+      const row = el("div", { class: "imgrow", contenteditable: "false" });
+      if (align) row.style.textAlign = align;
+      for (const it of b.items || []) { const f = makeFigure(pageIdx, it.bbox, +it.w || 40, it.chart, it.label); if (f) row.append(f); }
+      if (row.children.length) paper.append(row);
+    } else if (b.type === "line") paper.append(el("hr"));
+    else if (b.type === "cut") paper.append(el("hr", { class: "cut" }));
+  }
+}
+/* ---------- exact layout ---------- */
+const PW = 794, PH = 1123;
+function fixBoxes(blocks){
+  for (const b of blocks || []) if (b && b.type === "images" && !okBox(b) && Array.isArray(b.items)) {
+    const bs = b.items.filter(it => Array.isArray(it.bbox) && it.bbox.length === 4).map(it => it.bbox.map(Number));
+    if (bs.length) b.bbox = [Math.min(...bs.map(q => q[0])), Math.min(...bs.map(q => q[1])), Math.max(...bs.map(q => q[2])), Math.max(...bs.map(q => q[3]))];
+  }
+}
+function okBox(b){ return Array.isArray(b.bbox) && b.bbox.length === 4 && b.bbox.every(v => isFinite(+v)); }
+function normBox(b){ let [x0,y0,x1,y1] = b.bbox.map(Number); if (x1 > 1.5 || y1 > 1.5) return null;
+  return [Math.max(0, Math.min(x0, x1)), Math.max(0, Math.min(y0, y1)), Math.min(1, Math.max(x0, x1)), Math.min(1, Math.max(y0, y1))]; }
+const FONT_CSS = { serif: '"Times New Roman","Liberation Serif",Times,serif', sans: 'Arial,"Liberation Sans",Helvetica,sans-serif', mono: '"Courier New","Liberation Mono",monospace' };
+const mctx = document.createElement("canvas").getContext("2d");
+/* font size and line pitch (pt) measured from the block box and its text */
+/* find the real text lines of a block on the photo: tight ink box, number of lines, line pitch, fill of the last line */
+function analyzeBlock(src, b){
+  const box = normBox(b); if (!box) return;
+  const W = src.width, H = src.height, ex = 0.006;
+  const X0 = Math.max(0, Math.floor((box[0] - ex) * W)), Y0 = Math.max(0, Math.floor((box[1] - ex) * H));
+  const X1 = Math.min(W, Math.ceil((box[2] + ex) * W)), Y1 = Math.min(H, Math.ceil((box[3] + ex) * H));
+  const w = X1 - X0, h = Y1 - Y0; if (w < 8 || h < 6) return;
+  const d = src.getContext("2d").getImageData(X0, Y0, w, h).data;
+  const lum = new Float32Array(w * h); const hist = new Uint32Array(256);
+  for (let i = 0; i < w * h; i++) { const v = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2]; lum[i] = v; hist[v | 0]++; }
+  let acc = 0, paper = 255; for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc > w * h * 0.35) { paper = v; break; } }
+  const thr = paper - Math.max(55, paper * 0.3);
+  const rows = new Uint32Array(h); for (let y = 0; y < h; y++) { let c = 0; for (let x = 0; x < w; x++) if (lum[y * w + x] < thr) c++; rows[y] = c; }
+  const minInk = Math.max(2, w * 0.004);
+  // line cores = rows dense with ink (x-height zone); they stay separate even when ascenders/descenders touch.
+  // Two profiles: whole width, and the left fifth (catches short last lines like "очей.")
+  const oy0 = box[1] * H - Y0, oy1 = box[3] * H - Y0;
+  const bandsOf = (prof, minI) => {
+    let mx = 0; for (let y = 0; y < h; y++) if (prof[y] > mx) mx = prof[y];
+    if (mx < minI) return { bands: [], med: 0 };
+    const ct = Math.max(minI, mx * 0.22); let bs = [], st = -1;
+    for (let y = 0; y <= h; y++) { const ink = y < h && prof[y] >= ct; if (ink && st < 0) st = y; if (!ink && st >= 0) { bs.push([st, y - 1]); st = -1; } }
+    bs = bs.filter(q => (q[0] + q[1]) / 2 >= oy0 - 1 && (q[0] + q[1]) / 2 <= oy1 + 1);
+    if (!bs.length) return { bands: [], med: 0 };
+    const hs = bs.map(q => q[1] - q[0] + 1).sort((a, z) => a - z), md = hs[hs.length - 1 - Math.floor((hs.length - 1) / 2)];
+    const mg = []; for (const q of bs) { const last = mg[mg.length - 1]; if (last && q[0] - last[1] < md * 0.35) last[1] = q[1]; else mg.push(q.slice()); }
+    return { bands: mg.filter(q => q[1] - q[0] + 1 >= md * 0.4 && (q[0] + q[1]) / 2 >= oy0 - 1 && (q[0] + q[1]) / 2 <= oy1 + 1), med: md };
+  };
+  // combined profile: a row is "core" if dense over the whole width OR at the left edge (short lines like "20 см")
+  const leftW = Math.max(10, Math.round(w * 0.16));
+  const rowsL = new Uint32Array(h); for (let y = 0; y < h; y++) { let c = 0; for (let x = 0; x < leftW; x++) if (lum[y * w + x] < thr) c++; rowsL[y] = c; }
+  let mxF = 0, mxL = 0; for (let y = 0; y < h; y++) { if (rows[y] > mxF) mxF = rows[y]; if (rowsL[y] > mxL) mxL = rowsL[y]; }
+  const comb = new Uint32Array(h);
+  for (let y = 0; y < h; y++) comb[y] = (rows[y] >= Math.max(minInk, mxF * 0.22) || rowsL[y] >= Math.max(2, mxL * 0.22)) ? 1000 : 0;
+  const A = bandsOf(comb, 1);
+  let bands = A.bands, med = A.med;
+  if (!bands.length) return;
+  // short first/last lines (e.g. a single word) are too thin for the core test: look one line pitch above/below
+  const pitchOf = () => bands.length > 1 ? ((bands[bands.length - 1][0] + bands[bands.length - 1][1]) - (bands[0][0] + bands[0][1])) / 2 / (bands.length - 1) : med * 1.55;
+  const inkShare = (a, z) => { a = Math.max(0, Math.round(a)); z = Math.min(h - 1, Math.round(z)); if (z < a) return 0; let k = 0; for (let y = a; y <= z; y++) if (rows[y] >= minInk) k++; return k / (z - a + 1); };
+  for (let guard = 0; guard < 40; guard++) {
+    const pch = pitchOf(), lc = (bands[bands.length - 1][0] + bands[bands.length - 1][1]) / 2, nc = lc + pch;
+    if (pch < med * 1.15 || nc > oy1 || nc + med / 2 >= h) break;
+    if (inkShare(nc - med * 0.35, nc + med * 0.35) < 0.6) break;
+    bands.push([Math.round(nc - med / 2), Math.round(nc + med / 2)]);
+  }
+  for (let guard = 0; guard < 40; guard++) {
+    const pch = pitchOf(), fc = (bands[0][0] + bands[0][1]) / 2, pc = fc - pch;
+    if (pch < med * 1.15 || pc < oy0 || pc - med / 2 < 0) break;
+    if (inkShare(pc - med * 0.35, pc + med * 0.35) < 0.6) break;
+    bands.unshift([Math.round(pc - med / 2), Math.round(pc + med / 2)]);
+  }
+  const coreH = med; const centers = bands.map(q => (q[0] + q[1]) / 2);
+  // extend first/last line to ascenders/descenders
+  let top = bands[0][0], lim = Math.max(0, top - Math.round(coreH * 0.9)); while (top - 1 >= lim && rows[top - 1] >= minInk) top--;
+  let bot = bands[bands.length - 1][1], limb = Math.min(h - 1, bot + Math.round(coreH * 0.7)); while (bot + 1 <= limb && rows[bot + 1] >= minInk) bot++;
+  bands[0][0] = top; bands[bands.length - 1][1] = bot;
+  // tight horizontal extent
+  let xl = w, xr = -1, lastR = -1; const by0 = bands[0][0], by1 = bands[bands.length - 1][1], lb = bands[bands.length - 1];
+  for (let y = by0; y <= by1; y++) for (let x = 0; x < w; x++) if (lum[y * w + x] < thr) { if (x < xl) xl = x; if (x > xr) xr = x; if (y >= lb[0] && x > lastR) lastR = x; }
+  if (xr < xl) return;
+  b.bbox = [(X0 + xl) / W, (Y0 + by0) / H, (X0 + xr + 1) / W, (Y0 + by1 + 1) / H];
+  // ink width of every line (for the font size: total printed text length)
+  let sumW = 0; const lineW = [];
+  for (const q of bands) { let a = w, z = -1; for (let y = q[0]; y <= q[1]; y++) for (let x = 0; x < w; x++) if (lum[y * w + x] < thr) { if (x < a) a = x; if (x > z) z = x; }
+    const lw = z >= a ? z - a + 1 : 0; sumW += lw; lineW.push(lw / W); }
+  b._sumWF = sumW / W; b._lineWF = lineW;
+  let n = bands.length;
+  // explicit line breaks from the model win when they disagree (underlines, stray marks)
+  const tlines = String(b.text || "").split("\n").length;
+  if (String(b.text || "").includes("\n") || (+b.lines === 1 && n > 1)) { if (n !== tlines) { n = tlines; b.lines = n; b._lastFill = null; b._lineWF = null;
+      const c0 = centers[0], c1 = centers[centers.length - 1]; b._pitchF = n > 1 && centers.length > 1 ? (c1 - c0) / (n - 1) / H : null; return; } }
+  if (n >= 1 && n <= 80 && (b.type === "paragraph" || b.type === "heading")) {
+    b.lines = n;
+    if (n > 1) b._pitchF = (centers[n - 1] - centers[0]) / (n - 1) / H;
+    b._lastFill = Math.max(0.05, Math.min(1, (lastR - xl + 1) / (xr - xl + 1)));
+  }
+}
+function textWidth100(t, font, boldAll){
+  // width at 100px, bold segments (**…**) measured bold
+  let w = 0; const parts = String(t).split(/(\*\*[^*]+\*\*)/);
+  for (const p of parts) { if (!p) continue; const bold = boldAll || /^\*\*.*\*\*$/.test(p); const txt = p.replace(/\*\*/g, "").replace(/\^\^/g, "");
+    mctx.font = (bold ? "bold " : "") + "100px " + (FONT_CSS[font] || FONT_CSS.serif); w += mctx.measureText(txt).width; }
+  return Math.max(1, w);
+}
+function measureText(b, box){
+  const lines = Math.max(1, +b.lines || 1);
+  const boldAll = b.type === "heading" || !!b.bold;
+  const raw = String(b.text || "");
+  const bw = (box[2] - box[0]) * PW, bh = (box[3] - box[1]) * PH;          // px on the A4 page
+  const w100 = textWidth100(raw.replace(/[\r\n\t]+/g, " ").trim() || "M", b.font, boldAll);
+  const fill = b._lastFill != null ? b._lastFill : 0.5;
+  const tl = raw.split("\n").map(t => t.trim());
+  let fsW = 0;
+  if (tl.length > 1 && b._lineWF && tl.length === b._lineWF.length) {
+    const est = tl.map((t, i) => t && b._lineWF[i] > 0 ? 100 * b._lineWF[i] * PW / textWidth100(t, b.font, boldAll) : 0).filter(v => v > 0).sort((a, z) => a - z);
+    fsW = est.length ? est[Math.floor(est.length / 2)] : 0;
+  }
+  if (!fsW && b._sumWF) { const sp = textWidth100(" ", b.font, boldAll) / 100; fsW = 100 * b._sumWF * PW / Math.max(1, w100 - sp * 100 * (lines - 1)); }
+  if (!fsW) fsW = 100 * bw * (lines === 1 ? 1 : (lines - 1) * 0.975 + fill) / w100;
+  let fs = fsW, lh;
+  if (lines > 1 && b._pitchF) lh = b._pitchF * PH;
+  else if (lines > 1) lh = (bh - 0.9 * fs) / (lines - 1);
+  if (!(lh > fs * 0.9 && lh < fs * 2.5)) lh = fs * 1.15;
+  if (lines === 1) fs = Math.min(fs, bh / 0.62);
+  return { fs: +(fs * 0.75).toFixed(2), lh: +(lh * 0.75).toFixed(2) };   // px -> pt
+}
+function layMetrics(box, lines, cursor, fsPt, lhPt){
+  const [x0, y0, x1, y1] = box; lines = Math.max(1, +lines || 1);
+  if (!(fsPt > 3 && lhPt > 3)) { const lhF0 = Math.max(0.006, (y1 - y0) / Math.max(0.85, lines - 0.15)); lhPt = lhF0 * 841.89; fsPt = lhPt / 1.15; }
+  const lhF = lhPt / 841.89, off = Math.max(0, (lhPt - 0.876 * fsPt) / 841.89), top = y0 - off;
+  return { x0, y0, x1, y1, lines, lhF, lhPx: lhF * PH, fsPx: Math.round(fsPt * 2) / 2 * 96 / 72,
+    gapPx: Math.max(0, (top - cursor) * PH), bottom: Math.max(cursor, top) + lines * lhF };
+}
+const TEXT_TYPES = { paragraph: 1, heading: 1, table: 1 };
+const ASC = { serif: [0.891, 0.216, 0.662], sans: [0.905, 0.212, 0.716], mono: [0.833, 0.300, 0.571] };
+/* give blocks of the same look one font size (measurement noise is a few %) */
+function unifySizes(list){
+  const t = list.filter(b => b._fs > 0 && (b.type === "paragraph" || b.type === "heading"));
+  const keyOf = b => (b.font || "serif") + (b.type === "heading" || b.bold ? "B" : "");
+  const groups = {}; for (const b of t) (groups[keyOf(b)] = groups[keyOf(b)] || []).push(b);
+  for (const g of Object.values(groups)) {
+    g.sort((a, z) => a._fs - z._fs);
+    let cl = [g[0]];
+    const flush = () => { const w = cl.map(b => b._fs).sort((a, z) => a - z); const med = w[Math.floor(w.length / 2)];
+      const v = Math.round(med * 2) / 2; for (const b of cl) { b._lh = b._lh * v / b._fs; b._fs = v; } };
+    for (let k = 1; k < g.length; k++) { if (g[k]._fs / cl[0]._fs <= 1.06) cl.push(g[k]); else { flush(); cl = [g[k]]; } }
+    flush();
+  }
+}
+function renderLayoutPage(blocks, pageIdx, target){
+  const pg = el("div", { class: "lpage", "data-page": pageIdx, contenteditable: "false" });
+  if (pages[pageIdx] && pages[pageIdx].bg) pg.style.backgroundImage = `url("${pages[pageIdx].bg}")`;
+  target.append(pg);
+  const list = blocks.filter(b => b && typeof b === "object" && TEXT_TYPES[b.type] && okBox(b) && normBox(b));
+  for (const b of list) if (b.type !== "table") { const m = measureText(b, normBox(b)); b._fs = m.fs; b._lh = m.lh; }
+  unifySizes(list);
+  for (const b of list) {
+    const box = normBox(b); const isText = b.type !== "table";
+    const font = ["serif","sans","mono"].includes(b.font) ? b.font : "serif";
+    const wrap = el("div", { class: "lb", contenteditable: "true", spellcheck: "false" });
+    renderBlocks([b], pageIdx, wrap);
+    const e = wrap.firstElementChild; if (!e) continue;
+    wrap.dataset.box = box.map(v => v.toFixed(4)).join(","); wrap.dataset.font = font; wrap.dataset.type = b.type;
+    const hasBr = isText && String(b.text || "").includes("\n");
+    let lines = 1, fs, lh;
+    if (isText) {
+      lines = Math.max(1, +b.lines || 1); fs = b._fs; lh = b._lh;
+      const m = ASC[font]; const off = Math.max(0, (lh - (m[0] + m[1]) * fs) / 2 + (m[0] - m[2]) * fs);  // pt
+      wrap.style.top = ((box[1] * 841.89 - off) / 841.89 * PH).toFixed(1) + "px";
+      wrap.style.width = (Math.min(1 - box[0], box[2] - box[0] + (hasBr ? 0.08 : 0.03)) * PW).toFixed(1) + "px";
+      wrap.style.fontSize = (fs * 96 / 72).toFixed(2) + "px"; wrap.style.lineHeight = (lh * 96 / 72).toFixed(2) + "px";
+      wrap.dataset.fs = fs; wrap.dataset.lh = lh; wrap.dataset.lines = lines; if (hasBr) wrap.dataset.br = "1";
+      if (b.type === "heading" || b.bold) wrap.style.fontWeight = "700";
+    } else {
+      wrap.style.top = (box[1] * PH).toFixed(1) + "px"; wrap.style.width = ((box[2] - box[0]) * PW).toFixed(1) + "px";
+      const nr = Math.max(1, (b.rows || []).length); const rowPx = (box[3] - box[1]) * PH / nr;
+      e.querySelectorAll("tr").forEach(tr => tr.style.height = rowPx.toFixed(1) + "px");
+      const tfs = +b.size > 4 ? +b.size : Math.max(6, Math.min(12, rowPx * 0.75 * 0.62));
+      wrap.style.fontSize = (tfs * 96 / 72).toFixed(2) + "px"; wrap.dataset.fs = tfs; wrap.dataset.lines = 1;
+    }
+    wrap.style.left = (box[0] * PW).toFixed(1) + "px";
+    pg.append(wrap);
+  }
+  return pg;
+}
+/* remove the content's ink from the page photo, keep the letterhead (logo, bars, watermark, footer) */
+function makeBackground(src, blocks){
+  const W = src.width, H = src.height;
+  const k = Math.min(1, 1800 / W); const c = document.createElement("canvas"); c.width = Math.round(W * k); c.height = Math.round(H * k);
+  const g = c.getContext("2d"); g.drawImage(src, 0, 0, c.width, c.height);
+  const r = Math.max(4, Math.round(c.width * 0.0065));
+  for (const b of blocks || []) {
+    if (!b || b.letterhead || !TEXT_TYPES[b.type] || !okBox(b)) continue; const box = normBox(b); if (!box) continue;
+    const pad = 0.004;
+    const x0 = Math.max(0, Math.floor((box[0] - pad) * c.width)), y0 = Math.max(0, Math.floor((box[1] - pad) * c.height));
+    const x1 = Math.min(c.width, Math.ceil((box[2] + pad) * c.width)), y1 = Math.min(c.height, Math.ceil((box[3] + pad) * c.height));
+    if (x1 - x0 < 2 || y1 - y0 < 2) continue;
+    const ex0 = Math.max(0, x0 - r), ey0 = Math.max(0, y0 - r), ex1 = Math.min(c.width, x1 + r), ey1 = Math.min(c.height, y1 + r);
+    const w = ex1 - ex0, h = ey1 - ey0; const im = g.getImageData(ex0, ey0, w, h), d = im.data;
+    const big = b.type === "table";
+    const R = big ? r * 2 : r;
+    // 1) ink mask: pixels clearly darker than the local paper/watermark level (closing = max then min removes thin strokes)
+    const filt = (srcA, dst, isMax, horiz) => { for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const i = (y * w + x) * 4;
+      for (let ch = 0; ch < 3; ch++) { let m = isMax ? 0 : 255;
+        for (let t = -R; t <= R; t++) { const xx = horiz ? x + t : x, yy = horiz ? y : y + t; if (xx < 0 || xx >= w || yy < 0 || yy >= h) continue;
+          const v = srcA[(yy * w + xx) * 4 + ch]; if (isMax ? v > m : v < m) m = v; }
+        dst[i + ch] = m; } } };
+    const t1 = new Uint8ClampedArray(d.length), t2 = new Uint8ClampedArray(d.length);
+    filt(d, t1, true, true); filt(t1, t2, true, false); filt(t2, t1, false, true); filt(t1, t2, false, false);
+    const raw = new Uint8Array(w * h);
+    for (let i = 0, j = 0; j < w * h; i += 4, j++) {
+      const lum = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2], bl = .299 * t2[i] + .587 * t2[i + 1] + .114 * t2[i + 2];
+      if (bl - lum > 42) raw[j] = 1; }
+    const D2 = 3, mask = new Uint8Array(w * h);           // dilate: also take the light halo around letters
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { if (!raw[y * w + x]) continue;
+      for (let dy = -D2; dy <= D2; dy++) for (let dx = -D2; dx <= D2; dx++) { const yy = y + dy, xx = x + dx; if (yy >= 0 && yy < h && xx >= 0 && xx < w) mask[yy * w + xx] = 1; } }
+    // 2) fill masked pixels with the average of the clean pixels around them (normalized box filter, integral images)
+    const fillR = Math.max(R, 6);
+    const IW = w + 1, I = [new Float64Array(IW * (h + 1)), new Float64Array(IW * (h + 1)), new Float64Array(IW * (h + 1)), new Float64Array(IW * (h + 1))];
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const j = y * w + x, i = j * 4, k = (y + 1) * IW + x + 1, ok = mask[j] ? 0 : 1;
+      for (let ch = 0; ch < 3; ch++) I[ch][k] = (ok ? d[i + ch] : 0) + I[ch][k - 1] + I[ch][k - IW] - I[ch][k - IW - 1];
+      I[3][k] = ok + I[3][k - 1] + I[3][k - IW] - I[3][k - IW - 1]; }
+    const boxSum = (A, xa, ya, xb, yb) => A[(yb + 1) * IW + xb + 1] - A[ya * IW + xb + 1] - A[(yb + 1) * IW + xa] + A[ya * IW + xa];
+    for (let y = y0 - ey0; y < y1 - ey0; y++) for (let x = x0 - ex0; x < x1 - ex0; x++) { const j = y * w + x; if (!big && !mask[j]) continue;
+      let rr = fillR, n = 0, xa, ya, xb, yb;
+      for (let tries = 0; tries < 5; tries++, rr *= 2) { xa = Math.max(0, x - rr); ya = Math.max(0, y - rr); xb = Math.min(w - 1, x + rr); yb = Math.min(h - 1, y + rr); n = boxSum(I[3], xa, ya, xb, yb); if (n >= 6) break; }
+      const i = j * 4;
+      if (n >= 1) for (let ch = 0; ch < 3; ch++) d[i + ch] = boxSum(I[ch], xa, ya, xb, yb) / n;
+      else { d[i] = t2[i]; d[i + 1] = t2[i + 1]; d[i + 2] = t2[i + 2]; } }
+    g.putImageData(im, ex0, ey0);
+  }
+  return c;
+}
+function makeTable(b){
+  const rows = Array.isArray(b.rows) ? b.rows : [];
+  // simulate the grid to know the column count and fill short rows
+  const pend = []; const rowCells = []; let ncol = 1;
+  for (const r of rows) {
+    let c = 0; const cells = []; const q = (r || []).slice();
+    const ahead = () => pend.some((p, i) => i >= c && p && p.left > 0);
+    while (q.length || ahead()) {
+      if (pend[c] && pend[c].left > 0) { pend[c].left--; c += pend[c].span; continue; }
+      if (!q.length) { c++; continue; }
+      const raw = q.shift(); const cell = (raw && typeof raw === "object") ? raw : { text: raw == null ? "" : String(raw) };
+      const span = Math.max(1, +cell.colspan || 1), rs = Math.max(1, +cell.rowspan || 1);
+      cells.push(cell); if (rs > 1) pend[c] = { left: rs - 1, span }; c += span;
+    }
+    rowCells.push({ cells, width: c }); ncol = Math.max(ncol, c);
+  }
+  const mode = ["all","none","horizontal"].includes(b.borders) ? b.borders : "all";
+  const t = el("table", { class: "b-" + mode }); const cg = el("colgroup");
+  const w = (Array.isArray(b.widths) && b.widths.length === ncol) ? b.widths.map(Number) : Array(ncol).fill(1);
+  const tot = w.reduce((a, c) => a + (c||0), 0) || 1;
+  w.forEach(x => { const c = el("col"); c.style.width = ((x||0)/tot*100).toFixed(2) + "%"; cg.append(c); });
+  t.append(cg); const tb = el("tbody"); t.append(tb);
+  rowCells.forEach((rc, ri) => {
+    const tr = el("tr", { class: ri < (+b.header || 0) ? "head" : null });
+    for (const c of rc.cells) {
+      const td = el("td", { colspan: c.colspan > 1 ? c.colspan : null, rowspan: c.rowspan > 1 ? c.rowspan : null },
+        c.hand ? '<span class="hw">' + inlineMd(c.text) + "</span>" : c.bold ? "<b>" + inlineMd(c.text) + "</b>" : inlineMd(c.text));
+      const al = ALIGNS.includes(c.align) ? c.align : null; if (al) td.style.textAlign = al;
+      if (["top","bottom"].includes(c.valign)) td.style.verticalAlign = c.valign;
+      if (+c.size > 4 && +c.size < 40) td.style.fontSize = (+c.size * 1.333).toFixed(1) + "px";
+      tr.append(td);
+    }
+    for (let k = rc.width; k < ncol; k++) tr.append(el("td"));
+    tb.append(tr);
+  });
+  return t;
+}
+function makeFigure(pageIdx, bbox, w, chart, label){
+  const p = pages[pageIdx]; if (!p || !Array.isArray(bbox) || bbox.length !== 4) return null;
+  let [x0, y0, x1, y1] = bbox.map(Number); if ([x0,y0,x1,y1].some(isNaN)) return null;
+  if (x1 > 1.5 || y1 > 1.5) { x0 /= p.canvas.width; x1 /= p.canvas.width; y0 /= p.canvas.height; y1 /= p.canvas.height; }
+  const pad = 0.006; x0 = Math.max(0, Math.min(x0, x1) - pad); x1 = Math.min(1, Math.max(x0, x1) + pad); y0 = Math.max(0, Math.min(y0, y1) - pad); y1 = Math.min(1, Math.max(y0, y1) + pad);
+  if (x1 - x0 < .01 || y1 - y0 < .005) return null;
+  const fig = el("figure", { "data-page": pageIdx, "data-bbox": [x0,y0,x1,y1].map(v => v.toFixed(4)).join(","), "data-w": Math.max(4, Math.min(100, w)) });
+  if (chart && typeof chart === "object" && Array.isArray(chart.series)) { fig.dataset.chart = JSON.stringify(chart); fig.dataset.mode = "chart"; }
+  if (label === "logo" || label === "code") fig.dataset.clean = "1";
+  const img = el("img"); fig.append(img); setFigureImage(fig);
+  const ia = el("div", { class: "ia" });
+  const mk = (txt, title, fn) => { const bt = el("button", { title, type: "button" }); bt.textContent = txt; bt.onclick = ev => { ev.preventDefault(); ev.stopPropagation(); fn(); }; ia.append(bt); };
+  mk("⇄", "График: перерисованный / фрагмент фото (если графика ещё нет — распознать его)", async () => {
+    if (!fig.dataset.chart) { await digitizeFigure(fig); return; }
+    fig.dataset.mode = fig.dataset.mode === "chart" ? "photo" : "chart"; setFigureImage(fig); });
+  mk("✎", "Править данные графика", async () => {
+    if (!fig.dataset.chart) return toast("Сначала нажмите ⇄, чтобы распознать график");
+    const v = await editJson("Данные графика", JSON.parse(fig.dataset.chart)); if (!v) return;
+    fig.dataset.chart = JSON.stringify(v); fig.dataset.mode = "chart"; setFigureImage(fig); });
+  mk("◐", "Очистить фон фрагмента (белый фон для логотипов и рисунков)", () => { fig.dataset.clean = fig.dataset.clean === "1" ? "" : "1"; if (fig.dataset.mode === "chart") fig.dataset.mode = "photo"; setFigureImage(fig); });
+  mk("✂", "Перевыбрать область (фрагмент фото)", () => openCrop(fig));
+  mk("−", "Меньше", () => { fig.dataset.w = Math.max(4, +fig.dataset.w - 4); sizeFigure(fig); });
+  mk("+", "Больше", () => { fig.dataset.w = Math.min(100, +fig.dataset.w + 4); sizeFigure(fig); });
+  mk("🗑", "Удалить", () => { const row = fig.parentElement; fig.remove(); if (row && !row.querySelector("figure")) row.remove(); });
+  fig.append(ia); return fig;
+}
+function setFigureImage(fig){
+  if (fig.dataset.mode === "chart" && fig.dataset.chart) {
+    try { const c = drawChart(JSON.parse(fig.dataset.chart), { scale: 4 }); const img = fig.querySelector("img");
+      img.src = c.toDataURL("image/png"); img.dataset.pw = c.width; img.dataset.ph = c.height; sizeFigure(fig); return; }
+    catch (e) { console.error(e); fig.dataset.mode = "photo"; }
+  }
+  const p = pages[+fig.dataset.page]; const [x0,y0,x1,y1] = fig.dataset.bbox.split(",").map(Number);
+  let c = cropCanvas(p.canvas, x0, y0, x1, y1); if (fig.dataset.clean === "1") c = cleanCanvas(c);
+  const img = fig.querySelector("img"); img.src = c.toDataURL("image/jpeg", 0.92); img.dataset.pw = c.width; img.dataset.ph = c.height;
+  sizeFigure(fig);
+}
+/* whiten uneven paper background: divide by a local estimate of the paper brightness */
+function cleanCanvas(src){
+  const W = src.width, H = src.height, g = src.getContext("2d"), im = g.getImageData(0, 0, W, H), d = im.data;
+  const B = Math.max(8, Math.round(Math.min(W, H) / 12)), bw = Math.ceil(W / B), bh = Math.ceil(H / B), bg = new Float32Array(bw * bh);
+  for (let by = 0; by < bh; by++) for (let bx = 0; bx < bw; bx++) { const vals = [];
+    for (let y = by * B; y < Math.min(H, (by + 1) * B); y += 2) for (let x = bx * B; x < Math.min(W, (bx + 1) * B); x += 2) { const i = (y * W + x) * 4; vals.push(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]); }
+    vals.sort((a, z) => a - z); bg[by * bw + bx] = Math.max(60, vals[Math.floor(vals.length * 0.9)] || 255); }
+  const at = (x, y) => { const fx = Math.min(bw - 1, Math.max(0, x / B - .5)), fy = Math.min(bh - 1, Math.max(0, y / B - .5)); const x0 = Math.floor(fx), y0 = Math.floor(fy), x1 = Math.min(bw - 1, x0 + 1), y1 = Math.min(bh - 1, y0 + 1), ax = fx - x0, ay = fy - y0;
+    return (bg[y0 * bw + x0] * (1 - ax) + bg[y0 * bw + x1] * ax) * (1 - ay) + (bg[y1 * bw + x0] * (1 - ax) + bg[y1 * bw + x1] * ax) * ay; };
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = (y * W + x) * 4, b = at(x, y);
+    for (let k = 0; k < 3; k++) { let v = d[i + k] / b * 255; v = v > 235 ? 255 : Math.pow(v / 235, 1.6) * 235; d[i + k] = v < 0 ? 0 : v > 255 ? 255 : v; } }
+  const o = document.createElement("canvas"); o.width = W; o.height = H; o.getContext("2d").putImageData(im, 0, 0); return o;
+}
+async function digitizeFigure(fig){
+  if (!AI.ready()) return toast("Распознавание недоступно: нужен ключ API");
+  const p = pages[+fig.dataset.page]; const [x0,y0,x1,y1] = fig.dataset.bbox.split(",").map(Number);
+  const blob = await toBlob(cropCanvas(p.canvas, x0, y0, x1, y1));
+  toast("Распознаю график…"); setStatus("Распознаю график по фрагменту фото…");
+  try {
+    const spec = await AI.json("The image is a chart cut from a photographed document. Read the axis ranges and tick steps from the axis labels and trace every curve as 15-40 [x,y] points in DATA units, exactly following the drawn shape (do not idealize). Do not add titles or labels that are not printed.\nReply with ONLY the chart JSON in this format:\n" + CHARTSPEC.replace('Chart items additionally carry "chart":', ""), { images: [blob], modelTier: "complex" });
+    if (!spec || !Array.isArray(spec.series)) throw { code: "invalid_json" };
+    fig.dataset.chart = JSON.stringify(spec); fig.dataset.mode = "chart"; setFigureImage(fig); setStatus("График перерисован. ⇄ переключает на фото, ✎ правит данные.");
+  } catch (e) { setStatus("Не удалось распознать график" + (e && e.code ? " (" + e.code + ")" : ""), true); }
+}
+function sizeFigure(fig){ fig.style.width = fig.dataset.w + "%"; }
+
+/* ---------- crop dialog ---------- */
+let cropTarget = null, cropSel = null, cropPage = 0;
+function openCrop(fig){
+  if (!pages.length) { toast("Сначала добавьте фото"); return; }
+  cropTarget = fig; cropPage = fig ? +fig.dataset.page : 0;
+  const sel = $("#mpage"); sel.innerHTML = ""; pages.forEach((p, i) => sel.append(el("option", { value: i }, "Страница " + (i+1))));
+  sel.value = cropPage; sel.hidden = !!fig || pages.length < 2;
+  drawCrop(); cropSel = fig ? fig.dataset.bbox.split(",").map(Number) : null; showRect();
+  $("#modal").classList.add("open");
+}
+function drawCrop(){
+  const c = $("#mcanvas"), src = pages[cropPage].canvas; c.width = src.width; c.height = src.height; c.getContext("2d").drawImage(src, 0, 0);
+}
+function showRect(){
+  const r = $("#mrect"), c = $("#mcanvas"); if (!cropSel) { r.hidden = true; return; }
+  const [x0,y0,x1,y1] = cropSel; r.hidden = false;
+  Object.assign(r.style, { left: c.offsetLeft + x0*c.clientWidth + "px", top: c.offsetTop + y0*c.clientHeight + "px", width: (x1-x0)*c.clientWidth + "px", height: (y1-y0)*c.clientHeight + "px" });
+}
+$("#mpage").onchange = e => { cropPage = +e.target.value; cropSel = null; drawCrop(); showRect(); };
+(() => {
+  const c = $("#mcanvas"); let start = null;
+  const pos = ev => { const r = c.getBoundingClientRect(); return [Math.min(1, Math.max(0, (ev.clientX - r.left)/r.width)), Math.min(1, Math.max(0, (ev.clientY - r.top)/r.height))]; };
+  c.addEventListener("pointerdown", ev => { start = pos(ev); c.setPointerCapture(ev.pointerId); cropSel = [...start, ...start]; showRect(); });
+  c.addEventListener("pointermove", ev => { if (!start) return; const q = pos(ev); cropSel = [Math.min(start[0],q[0]), Math.min(start[1],q[1]), Math.max(start[0],q[0]), Math.max(start[1],q[1])]; showRect(); });
+  c.addEventListener("pointerup", () => { start = null; });
+})();
+$("#mcancel").onclick = () => $("#modal").classList.remove("open");
+$("#mok").onclick = () => {
+  if (!cropSel || cropSel[2]-cropSel[0] < .01 || cropSel[3]-cropSel[1] < .005) { toast("Выделите область"); return; }
+  if (cropTarget) { cropTarget.dataset.bbox = cropSel.map(v => v.toFixed(4)).join(","); cropTarget.dataset.mode = "photo"; setFigureImage(cropTarget); }
+  else {
+    const f = makeFigure(cropPage, cropSel, Math.round((cropSel[2]-cropSel[0]) * 100));
+    const row = el("div", { class: "imgrow", contenteditable: "false" }); row.append(f); insertAtCaret(row);
+  }
+  $("#modal").classList.remove("open");
+};
+let lastRange = null;
+document.addEventListener("selectionchange", () => { const s = getSelection(); if (s.rangeCount && paper.contains(s.anchorNode)) lastRange = s.getRangeAt(0).cloneRange(); markCell(); });
+function insertAtCaret(node){
+  let blk = lastRange && lastRange.startContainer; while (blk && blk.parentNode !== paper) blk = blk.parentNode;
+  if (blk) blk.after(node); else paper.append(node);
+}
+$("#addImg").onclick = () => openCrop(null);
+
+/* ---------- toolbar ---------- */
+document.querySelectorAll("#tb button").forEach(b => b.addEventListener("mousedown", e => { if (!b.classList.contains("exp") && b.id !== "copyBtn") e.preventDefault(); }));
+document.querySelectorAll("[data-cmd]").forEach(b => { b.onclick = () => { document.execCommand(b.dataset.cmd); paper.focus(); }; });
+let curCell = null;
+function markCell(){
+  const s = getSelection(); let n = s.anchorNode; while (n && n !== paper && n.nodeName !== "TD") n = n.parentNode;
+  const td = n && n.nodeName === "TD" ? n : null;
+  if (td === curCell) return; if (curCell) curCell.classList.remove("sel"); curCell = td; if (td) td.classList.add("sel");
+}
+function needCell(){ if (!curCell || !paper.contains(curCell)) { curCell = null; toast("Поставьте курсор в ячейку таблицы"); return false; } return true; }
+const span = (td, a) => Math.max(1, +(td.getAttribute(a) || 1));
+
+/* table grid that understands colspan + rowspan */
+function tgrid(t){
+  const rows = [...t.rows]; const g = rows.map(() => []); const pos = new Map();
+  rows.forEach((tr, r) => { let c = 0;
+    for (const td of tr.cells) { while (g[r][c]) c++;
+      const cs = span(td, "colspan"), rs = span(td, "rowspan"); pos.set(td, { r, c, cs, rs });
+      for (let dr = 0; dr < rs && r + dr < rows.length; dr++) for (let dc = 0; dc < cs; dc++) g[r + dr][c + dc] = td;
+      c += cs; } });
+  const ncol = Math.max(0, ...g.map(row => row.length));
+  return { rows, g, pos, ncol };
+}
+function insertCell(tr, td, col, G){   // insert td into tr so it lands at grid column col
+  for (const c of tr.cells) { const p = G.pos.get(c); if (p && p.c > col) { tr.insertBefore(td, c); return; } } tr.append(td);
+}
+function cols(t, n){ let cg = t.querySelector("colgroup"); if (!cg) { cg = el("colgroup"); t.prepend(cg); }
+  while (cg.children.length < n) { const c = el("col"); c.style.width = (100 / n).toFixed(2) + "%"; cg.append(c); }
+  return [...cg.children]; }
+function normCols(t){ const cs = [...t.querySelectorAll("col")]; const tot = cs.reduce((a, c) => a + parseFloat(c.style.width || 0), 0) || 1; cs.forEach(c => c.style.width = (parseFloat(c.style.width || 0) / tot * 100).toFixed(2) + "%"); }
+
+const T = {
+  rowAdd(){ const t = curCell.closest("table"), G = tgrid(t), p = G.pos.get(curCell), rEnd = p.r + p.rs - 1;
+    const tr = el("tr"); const seen = new Set();
+    for (let c = 0; c < G.ncol; c++) { const cell = G.g[rEnd][c]; if (!cell) { tr.append(el("td")); continue; }
+      const q = G.pos.get(cell);
+      if (q.r + q.rs - 1 > rEnd) { if (!seen.has(cell)) { cell.setAttribute("rowspan", q.rs + 1); seen.add(cell); } c = q.c + q.cs - 1; continue; }
+      tr.append(el("td")); }
+    G.rows[rEnd].after(tr); },
+  rowDel(){ const t = curCell.closest("table"), G = tgrid(t), p = G.pos.get(curCell), r = p.r; const tr = G.rows[r]; const seen = new Set();
+    for (let c = 0; c < G.ncol; c++) { const cell = G.g[r][c]; if (!cell || seen.has(cell)) continue; seen.add(cell); const q = G.pos.get(cell);
+      if (q.rs > 1) { cell.setAttribute("rowspan", q.rs - 1); if (q.rs - 1 === 1) cell.removeAttribute("rowspan");
+        if (q.r === r) { const next = G.rows[r + 1]; if (next) insertCell(next, cell, q.c, G); } } }
+    tr.remove(); curCell = null; if (!t.querySelector("td")) t.remove(); },
+  colAdd(){ const t = curCell.closest("table"), G = tgrid(t), p = G.pos.get(curCell), cEnd = p.c + p.cs - 1; const seen = new Set();
+    G.rows.forEach((tr, r) => { const cell = G.g[r][cEnd]; if (!cell) { tr.append(el("td")); return; } if (seen.has(cell)) return; seen.add(cell); const q = G.pos.get(cell);
+      if (q.c + q.cs - 1 > cEnd) { cell.setAttribute("colspan", q.cs + 1); return; }
+      const n = el("td"); if (q.rs > 1) n.setAttribute("rowspan", q.rs); cell.after(n); });
+    const cs = cols(t, G.ncol); const nc = el("col"); nc.style.width = cs[cEnd] ? cs[cEnd].style.width : "10%"; (cs[cEnd] || cs[cs.length - 1]).after(nc); normCols(t); },
+  colDel(){ const t = curCell.closest("table"), G = tgrid(t), p = G.pos.get(curCell), c = p.c; const seen = new Set();
+    G.rows.forEach((tr, r) => { const cell = G.g[r][c]; if (!cell || seen.has(cell)) return; seen.add(cell); const q = G.pos.get(cell);
+      if (q.cs > 1) { q.cs - 1 === 1 ? cell.removeAttribute("colspan") : cell.setAttribute("colspan", q.cs - 1); } else cell.remove(); });
+    const cs = cols(t, G.ncol); if (cs[c]) cs[c].remove(); normCols(t); curCell = null;
+    t.querySelectorAll("tr").forEach(tr => { if (!tr.cells.length) tr.remove(); }); if (!t.querySelector("td")) t.remove(); },
+  mergeRight(){ const t = curCell.closest("table"), G = tgrid(t), p = G.pos.get(curCell); const nb = (G.g[p.r] || [])[p.c + p.cs];
+    if (!nb) return toast("Справа нет ячейки"); const q = G.pos.get(nb);
+    if (q.r !== p.r || q.rs !== p.rs) return toast("Ячейки разной высоты: сначала разъедините");
+    curCell.setAttribute("colspan", p.cs + q.cs); if (nb.textContent.trim()) curCell.innerHTML += (curCell.textContent.trim() ? " " : "") + nb.innerHTML; nb.remove(); },
+  mergeDown(){ const t = curCell.closest("table"), G = tgrid(t), p = G.pos.get(curCell); const nb = (G.g[p.r + p.rs] || [])[p.c];
+    if (!nb) return toast("Снизу нет ячейки"); const q = G.pos.get(nb);
+    if (q.c !== p.c || q.cs !== p.cs) return toast("Ячейки разной ширины: сначала разъедините");
+    curCell.setAttribute("rowspan", p.rs + q.rs); if (nb.textContent.trim()) curCell.innerHTML += "<br>" + nb.innerHTML; nb.remove();
+    t.querySelectorAll("tr").forEach(tr => { if (!tr.cells.length) tr.remove(); }); },
+  split(){ const t = curCell.closest("table"); let G = tgrid(t); const p = G.pos.get(curCell);
+    if (p.cs === 1 && p.rs === 1) return toast("Ячейка не объединена");
+    curCell.removeAttribute("colspan"); curCell.removeAttribute("rowspan");
+    for (let dr = 0; dr < p.rs; dr++) for (let dc = 0; dc < p.cs; dc++) { if (!dr && !dc) continue;
+      G = tgrid(t); const tr = G.rows[p.r + dr]; if (!tr) continue; insertCell(tr, el("td"), p.c + dc, G); } },
+  wider(d){ const t = curCell.closest("table"), G = tgrid(t), p = G.pos.get(curCell); const cs = cols(t, G.ncol); const i = p.c + p.cs - 1;
+    const w = parseFloat(cs[i].style.width) || 10; const nw = Math.max(2, w + d); const others = cs.filter((_, k) => k !== i);
+    const ot = others.reduce((a, c) => a + parseFloat(c.style.width || 0), 0) || 1; const k = (100 - nw) / ot;
+    others.forEach(c => c.style.width = (parseFloat(c.style.width || 0) * k).toFixed(2) + "%"); cs[i].style.width = nw.toFixed(2) + "%"; },
+  header(){ const tr = curCell.parentNode; tr.classList.toggle("head"); toast(tr.classList.contains("head") ? "Строка — шапка таблицы" : "Строка — обычная"); },
+  borders(){ const t = curCell.closest("table"); const order = ["b-all","b-horizontal","b-none"];
+    const cur = order.find(c => t.classList.contains(c)) || "b-all"; t.classList.remove(cur); const nx = order[(order.indexOf(cur)+1)%3]; t.classList.add(nx);
+    toast({ "b-all":"Рамки: все линии", "b-horizontal":"Рамки: только горизонтальные", "b-none":"Рамки: без линий" }[nx]); },
+  valign(){ const v = curCell.style.verticalAlign; curCell.style.verticalAlign = v === "top" ? "bottom" : v === "bottom" ? "" : "top";
+    toast("По вертикали: " + ({ top: "сверху", bottom: "снизу" }[curCell.style.verticalAlign] || "по центру")); },
+};
+const bindT = (id, fn) => { const b = $("#" + id); if (b) b.onclick = () => { if (needCell()) fn(); }; };
+bindT("rowAdd", T.rowAdd); bindT("rowDel", T.rowDel); bindT("colAdd", T.colAdd); bindT("colDel", T.colDel);
+bindT("mergeR", T.mergeRight); bindT("mergeD", T.mergeDown); bindT("splitC", T.split);
+bindT("colWide", () => T.wider(2)); bindT("colNarrow", () => T.wider(-2)); bindT("headRow", T.header); bindT("bordersBtn", T.borders); bindT("vAlign", T.valign);
+
+/* blocks */
+function curBlock(){ const s = getSelection(); let n = s.anchorNode || (lastRange && lastRange.startContainer);
+  if (!n || !paper.contains(n)) n = lastRange && lastRange.startContainer;
+  while (n && n.parentNode !== paper) n = n.parentNode; return n && n.nodeType === 1 ? n : null; }
+$("#hBtn").onclick = () => { document.execCommand("formatBlock", false, "H2"); const b = curBlock(); if (b && b.nodeName === "H2") b.classList.add("rule"); };
+$("#pBtn").onclick = () => document.execCommand("formatBlock", false, "P");
+$("#ruleBtn").onclick = () => { const b = curBlock(); if (b && /^H\d$/.test(b.nodeName)) b.classList.toggle("rule"); else toast("Линия под заголовком: поставьте курсор в заголовок"); };
+function fontStep(d){ const b = curBlock(); if (!b || b.nodeName === "TABLE" || b.classList.contains("imgrow")) {
+    if (curCell) { const cur = parseFloat(curCell.style.fontSize) || 13.3; curCell.style.fontSize = Math.max(8, cur + d * 1.33).toFixed(1) + "px"; return; }
+    return toast("Поставьте курсор в абзац"); }
+  const cur = parseFloat(b.style.fontSize) || parseFloat(getComputedStyle(b).fontSize); b.style.fontSize = Math.max(8, Math.min(40, cur + d * 1.33)).toFixed(1) + "px"; }
+$("#fMinus").onclick = () => fontStep(-1); $("#fPlus").onclick = () => fontStep(1);
+
+/* inserts */
+function placeNode(node){ insertAtCaret(node); }
+$("#lineBtn").onclick = () => placeNode(el("hr"));
+$("#cutBtn").onclick = () => placeNode(el("hr", { class: "cut" }));
+$("#pbBtn").onclick = () => placeNode(el("div", { class: "pb", contenteditable: "false" }));
+$("#tblBtn").onclick = async () => {
+  const v = await askInline("Новая таблица", [["Строк", 3], ["Столбцов", 3]]); if (!v) return;
+  const r = Math.max(1, Math.min(60, v[0] | 0)), c = Math.max(1, Math.min(20, v[1] | 0));
+  const rows = Array.from({ length: r }, () => Array(c).fill("")); placeNode(makeTable({ rows, borders: "all", header: 1 })); };
+
+/* ---------- editable HTML -> blocks ---------- */
+function runsOf(node, fmt, lines){
+  // walk inline content; <br> and block children start new lines
+  for (const ch of node.childNodes) {
+    if (ch.nodeType === 3) { const t = PRESERVE ? ch.nodeValue.replace(/[\r\n\t]+/g, " ") : ch.nodeValue.replace(/\s+/g, " "); if (t) lines[lines.length-1].push({ text: t, ...fmt }); continue; }
+    if (ch.nodeType !== 1) continue;
+    const tag = ch.nodeName; const st = ch.style || {};
+    if (tag === "BR") { lines.push([]); continue; }
+    if (tag === "FIGURE" || tag === "IMG") continue;
+    const f = { ...fmt };
+    if (tag === "B" || tag === "STRONG" || +st.fontWeight >= 600 || st.fontWeight === "bold") f.bold = true;
+    if (tag === "I" || tag === "EM" || st.fontStyle === "italic") f.italic = true;
+    if (tag === "U" || /underline/.test(st.textDecoration || "")) f.underline = true;
+    if (ch.classList && ch.classList.contains("hw")) f.hand = true;
+    const isBlock = /^(DIV|P|H\d|LI)$/.test(tag);
+    if (isBlock && lines[lines.length-1].length) lines.push([]);
+    runsOf(ch, f, lines);
+    if (isBlock) lines.push([]);
+  }
+  return lines;
+}
+function cleanLines(lines){
+  const out = lines.map(l => { const m = []; for (const r of l) { const p = m[m.length-1];
+      if (p && !!p.bold === !!r.bold && !!p.italic === !!r.italic && !!p.underline === !!r.underline && !!p.hand === !!r.hand) p.text += r.text; else m.push({ ...r }); } return m; });
+  while (out.length > 1 && !out[out.length-1].length) out.pop();
+  return out;
+}
+function alignOf(e){ const a = e.style.textAlign || e.getAttribute("align") || ""; return a === "start" ? "left" : (ALIGNS.includes(a) ? a : undefined); }
+function figToImage(fig){
+  const img = fig.querySelector("img"); if (!img || !img.src.startsWith("data:")) return null;
+  const b64 = img.src.split(",")[1]; const bin = atob(b64); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return { data: u, px: { w: +img.dataset.pw || img.naturalWidth || 100, h: +img.dataset.ph || img.naturalHeight || 100 }, kind: img.src.startsWith("data:image/png") ? "png" : "jpg", w: +fig.dataset.w || 40 };
+}
+let PRESERVE = false;
+function htmlToBlocks(){
+  const blocks = [];
+  const pushPara = (lines, base) => {
+    const cl = cleanLines(lines);
+    if (PRESERVE && cl.length > 1) { const runs = []; cl.forEach((l, i) => { if (i) runs.push({ text: "\n" }); runs.push(...l); }); blocks.push({ type: "paragraph", runs, ...base }); return; }
+    for (const l of cl) blocks.push({ type: "paragraph", runs: l.length ? l : [{ text: "" }], ...base }); };
+  const walk = nodes => { for (const n of nodes) {
+    if (n.nodeType === 3) { if (n.nodeValue.trim()) blocks.push({ type: "paragraph", text: n.nodeValue.trim() }); continue; }
+    if (n.nodeType !== 1) continue;
+    if (n.classList.contains("lpage")) {
+      const pg = pages[+n.dataset.page]; let image = null;
+      if (pg && pg.bg) image = dataUrlImage(pg.bg);
+      blocks.push({ type: "pagebg", image }); PRESERVE = true; walk(n.childNodes); PRESERVE = false; continue;
+    }
+    const before = blocks.length;
+    if (n.classList.contains("lb")) {
+      const tbl = n.querySelector("table"), first = n.firstElementChild;
+      if (tbl) one(tbl);
+      else {
+        const lines = runsOf(n, {}, [[]]);
+        const base = { align: alignOf(first || n) };
+        if (first && /^H\d$/.test(first.nodeName)) { const cl = cleanLines(lines); const runs = []; cl.forEach((l, i) => { if (i) runs.push({ text: "\n" }); runs.push(...l); });
+          blocks.push({ type: "paragraph", runs, bold: true, ...base }); }
+        else pushPara(lines, base);
+        if (blocks[before] && n.style.fontWeight === "700") blocks[before].bold = true;
+      }
+    } else one(n);
+    if (n.dataset && n.dataset.box && blocks[before]) {
+      blocks[before].box = n.dataset.box.split(",").map(Number); blocks[before].lines = +n.dataset.lines || 1; blocks[before].font = n.dataset.font || "serif"; if (n.dataset.br) blocks[before].br = true;
+      if (n.dataset.fs) { blocks[before].fs = +n.dataset.fs; blocks[before].lh = +n.dataset.lh; }
+    }
+  } };
+  const one = n => {
+    const tag = n.nodeName;
+    if (/^H[1-6]$/.test(tag)) { const t = PRESERVE ? cleanLines(runsOf(n, {}, [[]])).map(l => l.map(r => r.text).join("")).join("\n").trim() : n.textContent.trim();
+      blocks.push({ type: "heading", level: Math.min(3, +tag[1]), text: t, rule: n.classList.contains("rule"), align: alignOf(n) }); return; }
+    if (tag === "HR") { blocks.push({ type: n.classList.contains("cut") ? "cut" : "line" }); return; }
+    if (n.classList.contains("pb")) { blocks.push({ type: "pagebreak" }); return; }
+    if (n.classList.contains("imgrow")) { const items = [...n.querySelectorAll("figure")].map(figToImage).filter(Boolean); if (items.length) blocks.push({ type: "images", items, align: alignOf(n) || "left" }); return; }
+    if (tag === "TABLE") {
+      const mode = n.classList.contains("b-none") ? "none" : n.classList.contains("b-horizontal") ? "horizontal" : "all";
+      const trs = [...n.querySelectorAll("tr")]; let header = 0; while (header < trs.length && trs[header].classList.contains("head")) header++;
+      const rows = trs.map((tr, ri) => [...tr.children].map(td => {
+        const lines = cleanLines(runsOf(td, {}, [[]]));
+        const wrap = r => { const t = r.text; if (!t.trim()) return t; return r.hand ? "^^" + t + "^^" : r.bold ? "**" + t + "**" : r.italic ? "*" + t + "*" : t; };
+        const text = lines.map(l => l.map(wrap).join("")).join("\n").trim();
+        const c = { text }; if (ri >= header && tr.classList.contains("head")) c.bold = true; const cs = +(td.getAttribute("colspan")||1); if (cs > 1) c.colspan = cs; const rs = +(td.getAttribute("rowspan")||1); if (rs > 1) c.rowspan = rs;
+        if (td.style.verticalAlign === "top" || td.style.verticalAlign === "bottom") c.valign = td.style.verticalAlign;
+        const tfs = parseFloat(td.style.fontSize); if (tfs) c.size = +(tfs / 1.333).toFixed(1); const a = alignOf(td); if (a) c.align = a;
+        const fig = td.querySelector("figure"); if (fig) c.image = figToImage(fig);
+        return c; }));
+      const widths = [...n.querySelectorAll("col")].map(c => parseFloat(c.style.width) || 1);
+      blocks.push({ type: "table", borders: mode, header, rows, widths }); return;
+    }
+    // generic block (p, div, anything typed by the user)
+    const base = { align: alignOf(n) }; const fs = parseFloat(n.style.fontSize); if (fs) base.size = +(fs / 1.333).toFixed(1); if (n.style.fontStyle === "italic") base.italic = true;
+    if (n.querySelector("table,.imgrow")) { // nested structure pasted by user: flatten text
+      pushPara(runsOf(n, {}, [[]]), base); return; }
+    pushPara(runsOf(n, {}, [[]]), base);
+  };
+  walk(paper.childNodes);
+  return blocks;
+}
+function dataUrlImage(url){
+  const b64 = url.split(",")[1]; const bin = atob(b64); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+  return { data: u, px: { w: 794, h: 1123 }, kind: url.startsWith("data:image/png") ? "png" : "jpg" };
+}
+
+/* ---------- compare view ---------- */
+let firstPass = [], leftView = "photo", zoom = 1;
+const lscroll = $("#lscroll"), stage = $("#stage");
+function fitPapers(){
+  for (const pp of document.querySelectorAll(".paper")) {
+    const host = pp.parentElement; const avail = host.clientWidth - 32;
+    pp.style.zoom = (document.body.classList.contains("cmp") || avail < 794) ? Math.max(.35, Math.min(1, avail / 794)).toFixed(3) : "";
+  }
+}
+function renderLeft(){
+  lscroll.innerHTML = "";
+  $("#lvPhoto").classList.toggle("on", leftView === "photo"); $("#lvFirst").classList.toggle("on", leftView === "first");
+  $("#lvFirst").disabled = !firstPass.some(b => b && b.length);
+  if (leftView === "photo") {
+    for (const p of pages) { const im = el("img", { class: "orig" }); im.src = p.canvas.toDataURL("image/jpeg", .9);
+      im.style.width = Math.round(100 * zoom) + "%"; lscroll.append(im); }
+    $("#zLbl").textContent = Math.round(zoom * 100) + "%";
+  } else {
+    const ro = el("div", { class: "paper ro" }); lscroll.append(ro);
+    if (paper.classList.contains("layout")) { ro.classList.add("layout"); firstPass.forEach((b, i) => renderLayoutPage(b || [], i, ro)); }
+    else firstPass.forEach((b, i) => { if (i > 0) ro.append(el("div", { class: "pb" })); renderBlocks(b || [], i, ro); });
+    ro.querySelectorAll("[contenteditable]").forEach(x => x.removeAttribute("contenteditable"));
+    fitPapers();
+  }
+  markDiff();
+}
+const norm = e => e.textContent.replace(/\s+/g, " ").trim();
+function multisetMark(A, B){
+  const count = arr => { const m = new Map(); for (const e of arr) { const t = norm(e); if (t) m.set(t, (m.get(t) || 0) + 1); } return m; };
+  const ca = count(A), cb = count(B);
+  const mark = (arr, other) => { const used = new Map(); for (const e of arr) { const t = norm(e); if (!t) continue; const u = (used.get(t) || 0) + 1; used.set(t, u); if (u > (other.get(t) || 0)) e.classList.add("diff"); } };
+  mark(A, cb); mark(B, ca);
+}
+function markDiff(){
+  document.querySelectorAll(".diff").forEach(e => e.classList.remove("diff"));
+  const ro = lscroll.querySelector(".paper.ro"); const on = leftView === "first" && ro;
+  $("#diffLbl").style.display = on ? "" : "none";
+  if (!on) return;
+  const outside = root => [...root.querySelectorAll("p, h1, h2, h3")].filter(e => !e.closest("td"));
+  multisetMark(outside(ro), outside(paper));
+  const ta = [...ro.querySelectorAll("table")], tb = [...paper.querySelectorAll("table")];
+  const n = Math.max(ta.length, tb.length);
+  for (let k = 0; k < n; k++) {
+    const A = ta[k], B = tb[k];
+    if (!A || !B) { (A || B).classList.add("diff"); (A || B).querySelectorAll("td").forEach(td => norm(td) && td.classList.add("diff")); continue; }
+    const GA = tgrid(A), GB = tgrid(B);
+    if (GA.rows.length === GB.rows.length && GA.ncol === GB.ncol) {
+      const seen = new Set();
+      for (let r = 0; r < GA.rows.length; r++) for (let c = 0; c < GA.ncol; c++) {
+        const x = GA.g[r][c], y = GB.g[r][c]; if (!x || !y || seen.has(x)) continue; seen.add(x);
+        const px = GA.pos.get(x), py = GB.pos.get(y);
+        if (px.r !== r || px.c !== c) continue;
+        if (norm(x) !== norm(y) || px.cs !== py.cs || px.rs !== py.rs) { x.classList.add("diff"); y.classList.add("diff"); }
+      }
+    } else {
+      A.classList.add("diff"); B.classList.add("diff");
+      multisetMark([...A.querySelectorAll("td")], [...B.querySelectorAll("td")]);
+    }
+  }
+}
+function openCompare(){ if (!pages.length) return toast("Сначала добавьте фото"); document.body.classList.add("cmp"); $("#cmpBtn").classList.add("on");
+  leftView = firstPass.some(b => b && b.length) && leftView === "first" ? "first" : "photo"; renderLeft(); fitPapers(); }
+function closeCompare(){ document.body.classList.remove("cmp", "side"); $("#cmpBtn").classList.remove("on"); document.querySelectorAll(".diff").forEach(e => e.classList.remove("diff")); fitPapers(); }
+$("#cmpBtn").onclick = () => document.body.classList.contains("cmp") ? closeCompare() : openCompare();
+$("#sideBtn").onclick = () => { if (!document.body.classList.contains("cmp")) return toast("Панель и так открыта"); document.body.classList.toggle("side"); setTimeout(fitPapers, 0); };
+$("#lvPhoto").onclick = () => { leftView = "photo"; renderLeft(); };
+$("#lvFirst").onclick = () => { leftView = "first"; renderLeft(); };
+$("#zIn").onclick = () => { zoom = Math.min(4, zoom * 1.25); leftView = "photo"; renderLeft(); };
+$("#zOut").onclick = () => { zoom = Math.max(.4, zoom / 1.25); leftView = "photo"; renderLeft(); };
+$("#showDiff").onchange = e => document.body.classList.toggle("showdiff", e.target.checked);
+document.body.classList.add("showdiff");
+let syncing = false;
+function sync(from, to){ if (syncing || !$("#syncScroll").checked || !document.body.classList.contains("cmp")) return;
+  const f = from.scrollTop / Math.max(1, from.scrollHeight - from.clientHeight); syncing = true;
+  to.scrollTop = f * (to.scrollHeight - to.clientHeight); requestAnimationFrame(() => syncing = false); }
+lscroll.addEventListener("scroll", () => sync(lscroll, stage)); stage.addEventListener("scroll", () => sync(stage, lscroll));
+let diffT; paper.addEventListener("input", () => { clearTimeout(diffT); diffT = setTimeout(() => { if (leftView === "first") markDiff(); }, 600); });
+window.addEventListener("resize", fitPapers); fitPapers();
+
+/* ---------- export ---------- */
+$("#dlBtn").onclick = async () => {
+  if (!paper.textContent.trim() && !paper.querySelector("figure")) { toast("Документ пуст"); return; }
+
+  try {
+    const doc = buildDocx(window.docx, { blocks: htmlToBlocks(), size: 10, layout: !!paper.querySelector(".lpage") });
+    const blob = await window.docx.Packer.toBlob(doc);
+    const name = ((pages[0] && pages[0].name.replace(/\.[^.]+$/, "")) || "документ") + "_восстановлено.docx";
+    if (downloads) { await downloads.save({ filename: name, data: blob }); toast("Файл сохранён"); }
+    else { const u = URL.createObjectURL(blob); const a = el("a", { href: u, download: name }); document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); toast("Файл скачан"); }
+  } catch (e) {
+    if (e && e.code === "declined") return;
+    console.error(e); toast("Не удалось сохранить: " + ((e && (e.message || e.code)) || "ошибка"));
+  }
+};
+$("#copyBtn").onclick = async () => {
+  const clone = paper.cloneNode(true);
+  clone.querySelectorAll(".ia").forEach(x => x.remove()); clone.querySelectorAll(".diff").forEach(x => x.classList.remove("diff")); clone.querySelectorAll(".sel").forEach(x => x.classList.remove("sel"));
+  clone.querySelectorAll("table").forEach(t => { const mode = t.className; t.setAttribute("style", "border-collapse:collapse;width:100%");
+    t.querySelectorAll("td").forEach(td => { td.style.padding = "2px 5px"; if (mode.includes("b-all")) td.style.border = "1px solid #808080"; });
+    t.querySelectorAll("tr.head td").forEach(td => td.style.fontWeight = "bold"); });
+  clone.querySelectorAll(".rule").forEach(h => h.style.borderBottom = "1.5px solid #000");
+  clone.querySelectorAll(".pb").forEach(pb => pb.outerHTML = '<br style="page-break-before:always">');
+  clone.querySelectorAll("figure").forEach(f => { const img = f.querySelector("img"); img.style.width = Math.round(+f.dataset.w / 100 * 680) + "px"; f.replaceWith(img); });
+  const html = `<html><body style="font-family:Arial;font-size:10pt">${clone.innerHTML}</body></html>`;
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ "text/html": new Blob([html], { type: "text/html" }), "text/plain": new Blob([paper.innerText], { type: "text/plain" }) })]);
+    toast("Скопировано. Вставьте в Word (Ctrl+V)");
+  } catch {
+    const r = document.createRange(); r.selectNodeContents(paper); const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    toast("Выделил документ, нажмите Ctrl+C");
+  }
+};
+
+function askInline(title, fields){
+  return new Promise(res => {
+    const box = el("div", { class: "mbox" }, `<div style="font-weight:600">${escapeHtml(title)}</div>` +
+      fields.map(([l, v], i) => `<label style="display:flex;gap:10px;align-items:center;justify-content:space-between">${escapeHtml(l)} <input data-i="${i}" type="number" value="${v}" style="width:90px;padding:5px;font:inherit"></label>`).join("") +
+      `<div class="row"><button>Отмена</button><button class="exp" style="background:var(--acc);color:#fff;border-color:var(--acc)">OK</button></div>`);
+    const wrap = el("div", { class: "modal open" }); wrap.append(box); document.body.append(wrap);
+    const bs = box.querySelectorAll(".row button"); bs[0].onclick = () => { wrap.remove(); res(null); };
+    bs[1].onclick = () => { const v = [...box.querySelectorAll("input")].map(x => +x.value); wrap.remove(); res(v); };
+  });
+}
+function editJson(title, value){
+  return new Promise(res => {
+    const box = el("div", { class: "mbox" }, `<div style="font-weight:600">${escapeHtml(title)}</div><textarea spellcheck="false" style="width:min(760px,88vw);height:56vh;font:12px 'IBM Plex Mono',monospace;padding:8px"></textarea><div class="row"><span class="hint" style="margin-right:auto;color:var(--muted);font-size:12px">x/y — значения в единицах осей; series — линии, markers — точки, areas — заливки</span><button>Отмена</button><button class="exp" style="background:var(--acc);color:#fff;border-color:var(--acc)">Применить</button></div>`);
+    box.querySelector("textarea").value = JSON.stringify(value, null, 1);
+    const wrap = el("div", { class: "modal open" }); wrap.append(box); document.body.append(wrap);
+    const bs = box.querySelectorAll(".row button"); bs[0].onclick = () => { wrap.remove(); res(null); };
+    bs[1].onclick = () => { try { const v = JSON.parse(box.querySelector("textarea").value); wrap.remove(); res(v); } catch (e) { toast("Ошибка в JSON: " + e.message); } };
+  });
+}
+/* small inline confirm (window.confirm is blocked in the frame) */
+function confirmInline(text){
+  return new Promise(res => {
+    const m = $("#modal"), box = el("div", { class: "mbox" }, `<div>${escapeHtml(text)}</div><div class="row"><button>Отмена</button><button class="exp" style="background:var(--acc);color:#fff;border-color:var(--acc)">Да</button></div>`);
+    const wrap = el("div", { class: "modal open" }); wrap.append(box); document.body.append(wrap);
+    const [no, yes] = box.querySelectorAll("button"); no.onclick = () => { wrap.remove(); res(false); }; yes.onclick = () => { wrap.remove(); res(true); };
+  });
+}
+window.addEventListener("resize", showRect);
+</script>
+</body>
+</html>

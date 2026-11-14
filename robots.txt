@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dikins388.github.io/photo-to-word/sitemap.xml
