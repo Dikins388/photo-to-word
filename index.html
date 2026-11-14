@@ -68,6 +68,13 @@ button.sm{padding:3px 7px;font-size:12px}
 .ad-side{min-height:250px}
 .ad-bottom{margin:18px auto 0;width:min(728px,100%);min-height:90px}
 body.inclaude .ad{display:none!important}
+.btnlink{display:block;text-align:center;text-decoration:none;border-radius:7px;margin:8px 0 4px}
+.btnlink.primary{background:var(--acc);color:#fff;font-weight:500;padding:10px 12px}
+.btnlink.primary:hover{filter:brightness(1.07)}
+.claude-acc .btnlink{border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 10px;font-size:13px;margin:6px 0 0}
+.claude-acc .btnlink:hover{border-color:var(--acc)}
+.primary-link{display:block;text-align:center;margin-top:8px;background:var(--acc);color:#fff;text-decoration:none;font-weight:500;padding:10px 12px;border-radius:7px}
+.primary-link:hover{filter:brightness(1.07)}
 .note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px;margin-top:auto}
 main{display:flex;flex-direction:column;min-width:0;min-height:0}
 .work{flex:1;min-height:0;display:grid;grid-template-columns:1fr}
@@ -165,8 +172,18 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
       <label class="opt"><input type="radio" name="engine" value="ocr" checked> Бесплатно, прямо в браузере <span class="tag">фото не покидают компьютер</span></label>
       <label class="opt"><input type="radio" name="engine" value="ai"> Claude AI <span class="tag">точнее на сложных фото</span></label>
     </div>
-    <div id="apiBox" hidden>
-      <div class="step">Ключ API Anthropic</div>
+    <div id="claudeBox" hidden>
+      <div class="step">Claude AI на вашем аккаунте</div>
+      <div class="status" style="font-size:12.5px;color:var(--ink)">Режим Claude AI работает на странице сервиса внутри Claude, от вашего собственного аккаунта: ничего платить этому сайту и вводить ключи не нужно.</div>
+      <a id="openClaude" class="btnlink primary" href="https://claude.ai/artifact/QUecUTt9dXDq6jRoraaVaL" target="_blank" rel="noopener">Открыть сервис в Claude</a>
+      <div class="claude-acc">
+        <a class="btnlink" href="https://claude.ai/login" target="_blank" rel="noopener">Нет аккаунта Claude: зарегистрироваться бесплатно</a>
+        <a class="btnlink" href="https://claude.ai/login" target="_blank" rel="noopener">Есть аккаунт: войти в Claude</a>
+      </div>
+      <div class="status" style="font-size:12px">После входа нажмите «Открыть сервис в Claude» и загрузите фото уже там. Распознавание расходует лимит вашего аккаунта; когда он закончится, сервис скажет, что продолжить можно завтра.</div>
+      <details style="margin-top:6px"><summary style="cursor:pointer;font-size:12.5px;color:var(--muted)">У меня есть ключ API Anthropic</summary>
+    <div id="apiBox">
+      <div class="step" style="margin-top:6px">Ключ API Anthropic</div>
       <input id="apiKey" type="password" autocomplete="off" placeholder="sk-ant-…" style="width:100%;padding:8px;font:inherit;border:1px solid var(--line);border-radius:7px">
       <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
         <select id="apiModel" style="flex:1;padding:6px;font:inherit;border:1px solid var(--line);border-radius:7px">
@@ -176,6 +193,8 @@ body.showbox .lpage [data-box]{outline:1px dashed rgba(31,111,92,.5)}
       </div>
       <label class="opt" style="margin-top:6px"><input type="checkbox" id="apiRemember"> запомнить ключ в этом браузере</label>
       <div class="status" style="font-size:12px">Ключ получают на <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>; распознавание оплачивается с вашего аккаунта API. Ключ и фото уходят напрямую из вашего браузера в Anthropic, этот сайт их не хранит и никуда больше не отправляет.</div>
+    </div>
+      </details>
     </div>
     <div>
       <div class="step">2 · Распознавание</div>
@@ -314,6 +333,8 @@ function setStatus(t, err){ statusEl.textContent=t||""; statusEl.classList.toggl
 /* ---------- capabilities ---------- */
 // Inside Claude the page asks Claude through the viewer's account. Anywhere else (GitHub Pages etc.)
 // the visitor uses their own Anthropic API key, sent straight from their browser to api.anthropic.com.
+// the same service published on claude.ai: there it runs on the visitor's own Claude account
+const CLAUDE_APP_URL = (window.ADS && window.ADS.claudeAppUrl) || "https://claude.ai/artifact/QUecUTt9dXDq6jRoraaVaL";
 const hasClaude = typeof window.claude !== "undefined" && window.claude && typeof window.claude.use === "function";
 const LS = { get(k){ try { return localStorage.getItem(k); } catch { return null; } }, set(k, v){ try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} } };
 const AI = {
@@ -371,15 +392,20 @@ async function apiJson(prompt, opts){
     if (sampleFn) { try { const l = await sampleFn.limits(); imgLimit = l.images ? l.images.maxCount : 0; } catch { imgLimit = 0; } }
     if (!sampleFn || !imgLimit) { AI.mode = "api"; }
   }
-  if (AI.mode === "claude") document.querySelector('input[name="engine"][value="ai"]').checked = true;
-  const syncEngine = () => { const ai = AI.engine() === "ai"; $("#apiBox").hidden = !(ai && AI.mode === "api"); $("#aiOpts").style.display = ai ? "" : "none";
-    if (!ai) setStatus(""); else if (AI.mode === "api" && !AI.key()) setStatus("Введите свой ключ API Anthropic выше, чтобы распознавать через Claude."); refreshGo(); };
+  if (AI.mode === "claude") { document.querySelector('input[name="engine"][value="ai"]').checked = true;
+    // inside Claude the free in-browser engine is not available (its language files are not served here)
+    const ocrOpt = document.querySelector('input[name="engine"][value="ocr"]'); if (ocrOpt) ocrOpt.closest("label").style.display = "none"; }
+  const syncEngine = () => { const ai = AI.engine() === "ai"; $("#claudeBox").hidden = !(ai && AI.mode === "api"); $("#aiOpts").style.display = ai ? "" : "none";
+    if (ai && AI.mode === "api" && AI.key()) $("#claudeBox details").open = true;
+    $("#go").style.display = (ai && AI.mode === "api" && !AI.key()) ? "none" : "";
+    if (!ai) setStatus(""); else if (AI.mode === "api" && !AI.key()) setStatus("Откройте сервис в Claude кнопкой выше, или раскройте пункт про ключ API."); else setStatus(""); refreshGo(); };
   document.querySelectorAll('input[name="engine"]').forEach(r => r.addEventListener("change", syncEngine));
+  if ($("#openClaude")) $("#openClaude").href = CLAUDE_APP_URL;
   if (AI.mode === "api") {
     imgLimit = 3;
     const saved = LS.get("p2w_key"); if (saved) { $("#apiKey").value = saved; $("#apiRemember").checked = true; }
     const m = LS.get("p2w_model"); if (m) $("#apiModel").value = m;
-    $("#apiKey").addEventListener("input", () => { if ($("#apiRemember").checked) LS.set("p2w_key", AI.key() || null); refreshGo(); });
+    $("#apiKey").addEventListener("input", () => { if ($("#apiRemember").checked) LS.set("p2w_key", AI.key() || null); syncEngine(); });
     $("#apiRemember").addEventListener("change", e => LS.set("p2w_key", e.target.checked ? (AI.key() || null) : null));
     $("#apiModel").addEventListener("change", e => LS.set("p2w_model", e.target.value));
   }
@@ -586,8 +612,10 @@ async function recognize(){
     openCompare();
   } catch (e) {
     const code = e && e.code;
-    const msg = { cancelled: "Остановлено.", not_granted: "Доступ к Claude не разрешён для этой страницы.",
-      rate_limited: "Слишком много запросов или исчерпан лимит. Попробуйте позже.", refused: "Claude отказался обрабатывать это изображение.",
+    const msg = { cancelled: "Остановлено.",
+      not_granted: "Чтобы распознавать через Claude, разрешите странице пользоваться Claude в окне запроса. Или выберите бесплатный режим «прямо в браузере».",
+      sampling_disabled: "Claude недоступен для этого аккаунта. Войдите в свой аккаунт Claude на claude.ai/login или выберите бесплатный режим.",
+      rate_limited: AI.mode === "claude" ? "Лимит Claude на сегодня исчерпан. Вы можете продолжить завтра. Без лимитов, бесплатно прямо в браузере: dikins388.github.io/photo-to-word" : "Слишком много запросов. Попробуйте чуть позже.", refused: "Claude отказался обрабатывать это изображение.",
       invalid_json: "Ответ пришёл в неверном формате. Нажмите «Распознать» ещё раз.", image_rejected: "Изображение не принято: другой формат или слишком большой файл.",
       session_expired: "Сессия истекла, войдите в Claude заново.",
       bad_key: "Ключ API не подошёл. Проверьте его в console.anthropic.com.", no_credit: "На аккаунте API закончился баланс.",

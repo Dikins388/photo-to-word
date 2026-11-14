@@ -11,5 +11,7 @@ window.ADS = {
   bottom: "",
   // текст и ссылка заглушки (для тех, кто хочет купить рекламу напрямую)
   placeholderText: "Здесь может быть ваша реклама",
-  placeholderLink: ""   // например "mailto:you@example.com" или ссылка на Telegram
+  placeholderLink: "",   // например "mailto:you@example.com" или ссылка на Telegram
+  // адрес копии сервиса на claude.ai (режим Claude AI работает там через аккаунт посетителя)
+  claudeAppUrl: "https://claude.ai/artifact/QUecUTt9dXDq6jRoraaVaL"
 };
