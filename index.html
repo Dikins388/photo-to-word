@@ -764,12 +764,93 @@ function analyzeBlock(src, b){
     b._lastFill = Math.max(0.05, Math.min(1, (lastR - xl + 1) / (xr - xl + 1)));
   }
 }
-function textWidth100(t, font, boldAll){
+function textWidth100(t, font, boldAll, fontName){
   // width at 100px, bold segments (**…**) measured bold
   let w = 0; const parts = String(t).split(/(\*\*[^*]+\*\*)/);
   for (const p of parts) { if (!p) continue; const bold = boldAll || /^\*\*.*\*\*$/.test(p); const txt = p.replace(/\*\*/g, "").replace(/\^\^/g, "").replace(/\{\{\?|\}\}/g, "");
     mctx.font = (bold ? "bold " : "") + "100px " + (FONT_CSS[font] || FONT_CSS.serif); w += mctx.measureText(txt).width; }
   return Math.max(1, w);
+}
+/* ---------- exact font: family + size fitted word by word ---------- */
+// only fonts that Word has everywhere and that have metric-identical twins on other systems (Liberation, Carlito, Caladea):
+// the size fitted in the browser then matches what Word draws
+let FIT_SRC = null;
+const FONT_CANDIDATES = { serif: ["Times New Roman", "Cambria"], sans: ["Arial", "Calibri"], mono: ["Courier New"] };
+const FALLBACK_CSS = { serif: '"Liberation Serif",Times,serif', sans: '"Liberation Sans",Helvetica,sans-serif', mono: '"Liberation Mono",monospace' };
+const _avail = {};
+function fontAvailable(name){
+  if (name in _avail) return _avail[name];
+  const probe = "mmmmmmmmmlliiWШЖщ0123456789";
+  const w = f => { mctx.font = "72px " + f; return mctx.measureText(probe).width; };
+  // the font is really installed only if it changes the width against every generic fallback
+  const diff = g => Math.abs(w(`"${name}", ${g}`) - w(g)) > 0.5;
+  // (the generic families may themselves BE this font's twin, so one difference is enough)
+  return (_avail[name] = diff("monospace") || diff("sans-serif") || diff("serif"));
+}
+function cssFamily(name, kind){ return `"${name}",${FALLBACK_CSS[kind] || FALLBACK_CSS.serif}`; }
+function inkW(text, family, bold){ mctx.font = (bold ? "bold " : "") + "100px " + family; const m = mctx.measureText(text);
+  const ink = (m.actualBoundingBoxLeft || 0) + (m.actualBoundingBoxRight || 0); return ink > 1 ? ink : m.width; }
+function wordFit(words, name, kind){
+  // size (px at the page's scale) that makes each word exactly as wide as printed; spread = how well the font matches
+  const fam = cssFamily(name, kind), est = [];
+  for (const w of words || []) { const t = String(w.t || ""); if (w.low || t.replace(/[^\p{L}\d]/gu, "").length < 3) continue;
+    const iw = inkW(t, fam, w.b); if (iw > 5) est.push(100 * w.wF * PW / iw); }
+  if (est.length < 2) return null;
+  est.sort((a, z) => a - z); const med = est[Math.floor(est.length / 2)];
+  const dev = est.map(v => Math.abs(v - med) / med).sort((a, z) => a - z);
+  return { fs: med, spread: dev[Math.floor(dev.length / 2)], n: est.length };
+}
+/* shape check: draw each sample word with the candidate font and overlay it on the same word cut from the scan */
+const shapeCv = document.createElement("canvas"), shapeCtx = shapeCv.getContext("2d", { willReadFrequently: true });
+function wordMask(src, w){
+  const W = src.width, H = src.height, x0 = Math.max(0, Math.floor(w.x0F * W)), y0 = Math.max(0, Math.floor(w.y0F * H));
+  const ww = Math.max(2, Math.round(w.wF * W)), hh = Math.max(2, Math.round(w.hF * H));
+  const TH = 28, TW = Math.max(6, Math.min(400, Math.round(ww * TH / hh)));
+  const d = src.getContext("2d").getImageData(x0, y0, Math.min(ww, W - x0), Math.min(hh, H - y0)).data, cw = Math.min(ww, W - x0), ch = Math.min(hh, H - y0);
+  const g = new Float32Array(cw * ch); let mn = 255, mx = 0;
+  for (let i = 0; i < cw * ch; i++) { const v = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2]; g[i] = v; if (v < mn) mn = v; if (v > mx) mx = v; }
+  const thr = (mn + mx) / 2, A = new Uint8Array(TW * TH);
+  for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) { const sx = Math.min(cw - 1, Math.floor(x * cw / TW)), sy = Math.min(ch - 1, Math.floor(y * ch / TH)); A[y * TW + x] = g[sy * cw + sx] < thr ? 1 : 0; }
+  return { A, TW, TH };
+}
+function renderMask(text, family, bold, TW, TH){
+  shapeCv.width = Math.max(10, text.length * 70 + 40); shapeCv.height = 140;
+  shapeCtx.fillStyle = "#fff"; shapeCtx.fillRect(0, 0, shapeCv.width, 140); shapeCtx.fillStyle = "#000";
+  shapeCtx.font = (bold ? "bold " : "") + "80px " + family; shapeCtx.textBaseline = "alphabetic"; shapeCtx.fillText(text, 10, 105);
+  const d = shapeCtx.getImageData(0, 0, shapeCv.width, 140).data; let bx0 = 1e9, by0 = 1e9, bx1 = -1, by1 = -1;
+  for (let y = 0; y < 140; y++) for (let x = 0; x < shapeCv.width; x++) if (d[(y * shapeCv.width + x) * 4] < 128) { if (x < bx0) bx0 = x; if (x > bx1) bx1 = x; if (y < by0) by0 = y; if (y > by1) by1 = y; }
+  if (bx1 < 0) return null; const B = new Uint8Array(TW * TH);
+  for (let y = 0; y < TH; y++) for (let x = 0; x < TW; x++) { const sx = Math.floor(bx0 + x * (bx1 - bx0 + 1) / TW), sy = Math.floor(by0 + y * (by1 - by0 + 1) / TH); B[y * TW + x] = d[(sy * shapeCv.width + sx) * 4] < 128 ? 1 : 0; }
+  return B;
+}
+function shapeScore(src, words, name, kind){
+  const fam = cssFamily(name, kind); let sum = 0, n = 0;
+  for (const w of words) { const m = wordMask(src, w); const B = renderMask(w.t, fam, w.b, m.TW, m.TH); if (!B) continue;
+    let inter = 0, uni = 0; for (let i = 0; i < B.length; i++) { const a = m.A[i], b2 = B[i]; if (a && b2) inter++; if (a || b2) uni++; }
+    if (uni) { sum += inter / uni; n++; } }
+  return n ? sum / n : 0;
+}
+function fitFonts(blocks){
+  // choose one font per kind for the page (documents rarely mix more), a block may differ only when clearly better
+  const kinds = {};
+  for (const b of blocks) { if (!b._words || !b._words.length) continue; const k = ["serif","sans","mono"].includes(b.font) ? b.font : "serif"; (kinds[k] = kinds[k] || []).push(b); }
+  for (const [kind, list] of Object.entries(kinds)) {
+    const names = (FONT_CANDIDATES[kind] || FONT_CANDIDATES.serif).filter(fontAvailable);
+    if (!names.length) continue;
+    // page font by letter shapes on a sample of clear words (Times / Arial win ties: they are the usual document fonts)
+    const src = FIT_SRC;
+    const sample = list.flatMap(b => b._words || []).filter(w => !w.low && w.x0F != null && String(w.t).replace(/[^\p{L}]/gu, "").length >= 4)
+      .sort((a, z) => z.t.length - a.t.length).slice(0, 30);
+    const score = {};
+    for (const n of names) score[n] = src && sample.length >= 4 ? shapeScore(src, sample, n, kind) * (n === names[0] ? 1.03 : 1) : (n === names[0] ? 1 : 0);
+    const pageName = names.slice().sort((a, z) => score[z] - score[a])[0];
+    for (const b of list) {
+      let best = { name: pageName, r: wordFit(b._words, pageName, kind) };
+      // a block keeps the page font (mixing faces inside one document is rare and the risk of a wrong switch is high)
+      b._fontName = best.name;
+      if (best.r) b._fitPx = best.r.fs;
+    }
+  }
 }
 function measureText(b, box){
   const lines = Math.max(1, +b.lines || 1);
@@ -786,6 +867,7 @@ function measureText(b, box){
   }
   if (!fsW && b._sumWF) { const sp = textWidth100(" ", b.font, boldAll) / 100; fsW = 100 * b._sumWF * PW / Math.max(1, w100 - sp * 100 * (lines - 1)); }
   if (!fsW) fsW = 100 * bw * (lines === 1 ? 1 : (lines - 1) * 0.975 + fill) / w100;
+  if (b._fitPx) fsW = b._fitPx;
   let fs = fsW, lh;
   if (lines > 1 && b._pitchF) lh = b._pitchF * PH;
   else if (lines > 1) lh = (bh - 0.9 * fs) / (lines - 1);
@@ -809,18 +891,18 @@ function unifySizes(list){
   const allFs = t.map(b => b._fs).sort((a, z) => a - z), medFs = allFs[Math.floor(allFs.length / 2)] || 11;
   for (const b of t) {
     let fs = b._fs;
-    if (b._hF) { const fromH = b._hF * PHPT / 0.95; if (fs > fromH * 1.25) fs = fromH; }
+    if (b._hF && !b._fitPx) { const fromH = b._hF * PHPT / 0.95; if (fs > fromH * 1.25) fs = fromH; }
     fs = Math.max(medFs * 0.55, Math.min(medFs * 2.2, fs));
     if (fs !== b._fs) { b._lh = b._lh * fs / b._fs; b._fs = fs; }
   }
-  const keyOf = b => (b.font || "serif") + (b.type === "heading" || b.bold ? "B" : "");
+  const keyOf = b => (b._fontName || b.font || "serif") + (b.type === "heading" || b.bold ? "B" : "");
   const groups = {}; for (const b of t) (groups[keyOf(b)] = groups[keyOf(b)] || []).push(b);
   for (const g of Object.values(groups)) {
     g.sort((a, z) => a._fs - z._fs);
     let cl = [g[0]];
     const flush = () => { const w = cl.map(b => b._fs).sort((a, z) => a - z); const med = w[Math.floor(w.length / 2)];
       const v = Math.round(med * 2) / 2; for (const b of cl) { b._lh = b._lh * v / b._fs; b._fs = v; } };
-    for (let k = 1; k < g.length; k++) { if (g[k]._fs / cl[0]._fs <= 1.06) cl.push(g[k]); else { flush(); cl = [g[k]]; } }
+    for (let k = 1; k < g.length; k++) { if (g[k]._fs / cl[0]._fs <= 1.04) cl.push(g[k]); else { flush(); cl = [g[k]]; } }
     flush();
   }
 }
@@ -831,6 +913,7 @@ function renderLayoutPage(blocks, pageIdx, target){
   if (pages[pageIdx] && pages[pageIdx].bg) pg.style.backgroundImage = `url("${pages[pageIdx].bg}")`;
   target.append(pg);
   const list = blocks.filter(b => b && typeof b === "object" && TEXT_TYPES[b.type] && okBox(b) && normBox(b));
+  FIT_SRC = pages[pageIdx] && pages[pageIdx].canvas; fitFonts(list);
   for (const b of list) if (b.type !== "table") { const m = measureText(b, normBox(b)); b._fs = m.fs; b._lh = m.lh; }
   unifySizes(list);
   for (const b of list) {
@@ -840,6 +923,7 @@ function renderLayoutPage(blocks, pageIdx, target){
     renderBlocks([b], pageIdx, wrap);
     const e = wrap.firstElementChild; if (!e) continue;
     wrap.dataset.box = box.map(v => v.toFixed(4)).join(","); wrap.dataset.font = font; wrap.dataset.type = b.type;
+    if (b._fontName) { wrap.dataset.fontname = b._fontName; wrap.style.fontFamily = cssFamily(b._fontName, font); }
     const hasBr = isText && String(b.text || "").includes("\n");
     let lines = 1, fs, lh;
     if (isText) {
@@ -859,6 +943,10 @@ function renderLayoutPage(blocks, pageIdx, target){
       if (rowF) e.dataset.rows = rowF.map(v => v.toFixed(5)).join(",");
       let tfs = +b.size > 4 ? +b.size : Math.max(6, Math.min(12, rowPx * 0.75 * 0.62));
       if (b._hF) tfs = Math.max(5, Math.min(14, Math.round(b._hF * PHPT / 0.95 * 2) / 2));
+      if (b._fitPx) tfs = Math.max(4, Math.round(b._fitPx * 0.75 * 2) / 2);
+      if (b._lineTF) { e.dataset.lineTF = b._lineTF; e.dataset.lineGray = b._lineGray || 0;
+        const pxT = Math.max(0.5, b._lineTF * PH), col = `rgb(${b._lineGray|0},${b._lineGray|0},${b._lineGray|0})`;
+        e.querySelectorAll("td").forEach(td => { td.style.border = `${pxT.toFixed(2)}px solid ${col}`; }); }
       wrap.style.fontSize = (tfs * 96 / 72).toFixed(2) + "px"; wrap.dataset.fs = tfs; wrap.dataset.lines = 1;
     }
     wrap.style.left = (box[0] * PW).toFixed(1) + "px";
@@ -1218,7 +1306,8 @@ function htmlToBlocks(){
     const before = blocks.length;
     if (n.classList.contains("lb")) {
       const tbl = n.querySelector("table"), first = n.firstElementChild;
-      if (tbl) { one(tbl); if (blocks[before]) { if (n.dataset.fs) blocks[before].size = +n.dataset.fs; if (tbl.dataset.rows) blocks[before].rowF = tbl.dataset.rows.split(",").map(Number); } }
+      if (tbl) { one(tbl); if (blocks[before]) { if (n.dataset.fs) blocks[before].size = +n.dataset.fs; if (tbl.dataset.rows) blocks[before].rowF = tbl.dataset.rows.split(",").map(Number);
+        if (tbl.dataset.lineTF) { blocks[before].lineTF = +tbl.dataset.lineTF; blocks[before].lineGray = +tbl.dataset.lineGray; } } }
       else {
         const lines = runsOf(n, {}, [[]]);
         const base = { align: alignOf(first || n) };
@@ -1231,6 +1320,7 @@ function htmlToBlocks(){
     if (n.dataset && n.dataset.box && blocks[before]) {
       blocks[before].box = n.dataset.box.split(",").map(Number); blocks[before].lines = +n.dataset.lines || 1; blocks[before].font = n.dataset.font || "serif"; if (n.dataset.br) blocks[before].br = true;
       if (n.dataset.fs) { blocks[before].fs = +n.dataset.fs; blocks[before].lh = +n.dataset.lh; }
+      if (n.dataset.fontname) blocks[before].fontName = n.dataset.fontname;
     }
   } };
   const one = n => {

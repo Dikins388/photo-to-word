@@ -66,7 +66,7 @@
         lh: Math.round(lhPt * 20), fs: Math.max(4, Math.round(fs * 2) / 2),
         x: Math.max(0, Math.round(x0 * PAGE_W)), y: Math.max(0, Math.round(y0 * PAGE_H - offPt * 20)),
         w: Math.round(Math.min(1 - x0, x1 - x0 + slack) * PAGE_W), h: Math.round(lines * lhPt * 20),
-        font: FONTS[b.font] || FONTS.serif };
+        font: b.fontName || FONTS[b.font] || FONTS.serif };
     }
     const frameOf = L => ({ type: "absolute", position: { x: L.x, y: L.y }, width: L.w, height: L.h,
       anchor: { horizontal: D.FrameAnchorType.PAGE, vertical: D.FrameAnchorType.PAGE } });
@@ -120,6 +120,10 @@
       const header = b.header ?? 0;
       const size = b.size || (ncol > 8 ? BASE - 1 : BASE);
       const VA = { top: D.VerticalAlign.TOP, bottom: D.VerticalAlign.BOTTOM, center: D.VerticalAlign.CENTER };
+      // ruling lines as printed: thickness (eighths of a point) and grey level
+      let TL = LINE;
+      if (b.lineTF > 0) { const pt = b.lineTF * PAGE_H / 20; const g = Math.max(0, Math.min(200, b.lineGray | 0)).toString(16).padStart(2, "0");
+        TL = { style: D.BorderStyle.SINGLE, size: Math.max(2, Math.min(24, Math.round(pt * 8))), color: g + g + g }; }
 
       const trs = grid.map((items, ri) => {
         const full = []; let c = 0;
@@ -136,7 +140,7 @@
           else if (mode === "horizontal") borders = {
             top: ri === 0 ? LINE : NONE, left: NONE, right: NONE,
             bottom: (ri === header - 1 || ri === grid.length - 1) ? LINE : NONE };
-          else borders = { top: LINE, bottom: LINE, left: LINE, right: LINE };
+          else borders = { top: TL, bottom: TL, left: TL, right: TL };
           const common = { width: { size: w, type: D.WidthType.DXA }, columnSpan: it.span > 1 ? it.span : undefined, borders,
             margins: L ? { top: 0, bottom: 0, left: 40, right: 40 } : { top: 30, bottom: 30, left: 70, right: 70 } };
           if (it.cont) return new D.TableCell({ ...common, verticalMerge: D.VerticalMergeType.CONTINUE, children: [new D.Paragraph({ children: [] })] });
@@ -209,7 +213,7 @@
             const nrows = (b.rows || []).length || 1;
             L.rowH = Math.max(200, Math.round((L.y1 - L.y0) * PAGE_H / nrows));
             out.push(table({ ...b, size: b.size || Math.max(6, Math.min(12, Math.round(L.rowH / 20 * 0.62 * 2) / 2)) },
-              Math.max(1000, Math.round((L.x1 - L.x0) * PAGE_W)), 0, L.font, L));
+              Math.max(1000, Math.round((L.x1 - L.x0) * PAGE_W)), 0, b.fontName || L.font, L));
             out.push(new D.Paragraph({ spacing: { before: 0, after: 0, line: 20, lineRule: D.LineRuleType.EXACT }, children: [new D.TextRun({ text: "", size: 2 })] }));
           } else { out.push(table(b)); out.push(new D.Paragraph({ spacing: { after: 60 }, children: [] })); }
           break;

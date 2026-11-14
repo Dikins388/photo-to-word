@@ -92,7 +92,9 @@
       const cl = (vals, eps) => { vals.sort((p, q) => p - q); const o = []; for (const x of vals) { if (o.length && x - o[o.length - 1].v <= eps) { const c = o[o.length - 1]; c.s += x; c.n++; c.v = c.s / c.n; } else o.push({ v: x, s: x, n: 1 }); } return o.map(c => c.v); };
       const ys = cl(hs.map(l => l.y).concat([box.y0, box.y1]), 7), xs = cl(vs.map(l => l.x).concat([box.x0, box.x1]), 7);
       if (ys.length < 2 || xs.length < 2) continue;
-      tables.push({ box, ys, xs });
+      const ts = hs.map(l => l.t).concat(vs.map(l => l.t)).sort((p, q) => p - q);
+      let gsum = 0, gn = 0; for (const l of hs.slice(0, 6)) { const y = Math.round(l.y); for (let x = Math.round(l.x0) + 4; x < l.x1 - 4; x += 3) { gsum += M.gray[y * M.W + x]; gn++; } }
+      tables.push({ box, ys, xs, lineT: ts[Math.floor(ts.length / 2)] || 1, lineGray: gn ? Math.round(gsum / gn) : 0 });
     }
     return tables;
   }
@@ -306,7 +308,9 @@
       for (const row of rows) for (const c of row) c.text = String(c.text).split("\n").map(t => t.replace(/^[|\[\]]+\s*|\s*[|\[\]]+$/g, "").replace(/\s+\|\s+/g, " ")).join("\n").trim();
       const tFont = (() => { const f = groupsFontHint; return f || "serif"; })();
       blocks.push({ type: "table", borders: "all", header: 0, rows, widths: xs.slice(1).map((x, i) => x - xs[i]),
-        bbox: [box.x0 / W, box.y0 / H, box.x1 / W, box.y1 / H], _hF: hh / H, _rowF: ys.slice(1).map((y, i) => (y - ys[i]) / H), font: tFont });
+        bbox: [box.x0 / W, box.y0 / H, box.x1 / W, box.y1 / H], _hF: hh / H, _rowF: ys.slice(1).map((y, i) => (y - ys[i]) / H), font: tFont,
+        _words: tw.map(q => ({ t: q.text, x0F: q.x0 / W, y0F: q.y0 / H, wF: (q.x1 - q.x0) / W, hF: (q.y1 - q.y0) / H, b: !!q.bold, low: !!q.low })),
+        _lineTF: T.lineT / H, _lineGray: T.lineGray });
     }
 
     // free text: split each Tesseract line at wide gaps into segments
@@ -380,7 +384,8 @@
       blocks.push({ type: "paragraph", text: lines.join("\n"), lines: g.length, font, bold: allBold, align,
         bbox: [Math.min(...xs0) / W, g[0].y0 / H, Math.max(...xs1) / W, g[g.length - 1].y1 / H], _ocr: true,
         _pitchF: lh ? lh / H : null, _lineWF: g.map(s => (s.x1 - s.x0) / W), _lastFill: (g[g.length - 1].x1 - g[g.length - 1].x0) / Math.max(1, Math.max(...xs1) - Math.min(...xs0)),
-        _hF: median(g.map(s => s.h)) / H });
+        _hF: median(g.map(s => s.h)) / H,
+        _words: g.flatMap(s => s.ws).map(q => ({ t: q.text, x0F: q.x0 / W, y0F: q.y0 / H, wF: (q.x1 - q.x0) / W, hF: (q.y1 - q.y0) / H, b: !!q.bold, low: !!q.low })) });
     });
     blocks.sort((a, b) => a.bbox[1] - b.bbox[1] || a.bbox[0] - b.bbox[0]);
     const lowCount = words.filter(x => x.low).length;
