@@ -4,7 +4,7 @@
    "pagebg" blocks put a full-page background picture behind the text. */
 (function (root) {
   function buildDocx(D, doc) {
-    const PAGE_W = 11906, PAGE_H = 16838, LAYOUT = !!doc.layout;
+    let PAGE_W = 11906, PAGE_H = 16838; const LAYOUT = !!doc.layout;
     const MARGIN = LAYOUT ? 0 : (doc.margin || 850);
     const TEXT_W = PAGE_W - 2 * MARGIN;            // DXA
     const TEXT_PX = Math.round(TEXT_W / 1440 * 96); // px at 96 dpi
@@ -58,7 +58,7 @@
     function lay(b) {
       const [x0, y0, x1, y1] = b.box.map(Number); const lines = Math.max(1, +b.lines || 1);
       let fs = +b.fs, lhPt = +b.lh;
-      if (!(fs > 3 && lhPt > 3)) { lhPt = (y1 - y0) * 841.89 / Math.max(0.85, lines - 0.15); fs = lhPt / 1.15; }
+      if (!(fs > 3 && lhPt > 3)) { lhPt = (y1 - y0) * (PAGE_H / 20) / Math.max(0.85, lines - 0.15); fs = lhPt / 1.15; }
       const m = ASC[b.font] || ASC.serif;
       const offPt = Math.max(0, (lhPt - (m[0] + m[1]) * fs) / 2 + (m[0] - m[2]) * fs);   // line-box top above the ink top
       const slack = b.br ? 0.08 : 0.03;
@@ -138,13 +138,13 @@
             bottom: (ri === header - 1 || ri === grid.length - 1) ? LINE : NONE };
           else borders = { top: LINE, bottom: LINE, left: LINE, right: LINE };
           const common = { width: { size: w, type: D.WidthType.DXA }, columnSpan: it.span > 1 ? it.span : undefined, borders,
-            margins: { top: 30, bottom: 30, left: 70, right: 70 } };
+            margins: L ? { top: 0, bottom: 0, left: 40, right: 40 } : { top: 30, bottom: 30, left: 70, right: 70 } };
           if (it.cont) return new D.TableCell({ ...common, verticalMerge: D.VerticalMergeType.CONTINUE, children: [new D.Paragraph({ children: [] })] });
           const cl = it.cell;
           const lines = String(cl.text ?? "").split("\n");
           const children = lines.map(line => new D.Paragraph({
             alignment: al(cl.align || b.align),
-            spacing: { before: 0, after: 0 },
+            spacing: L ? { before: 0, after: 0, line: Math.round((cl.size || size) * 20 * 1.08), lineRule: D.LineRuleType.EXACT } : { before: 0, after: 0 },
             children: runs(line, { bold: cl.bold || (isHead && b.headerBold !== false), italic: cl.italic, hand: cl.hand, size: cl.size || size, font }),
           }));
           if (cl.image) children.push(new D.Paragraph({ alignment: al(cl.align), children: [imageRun(cl.image, Math.round(w / 1440 * 96))] }));
@@ -155,7 +155,8 @@
             children });
         });
         return new D.TableRow({ children: cells, tableHeader: isHead && header < grid.length,
-          height: (L && L.rowH) ? { value: L.rowH, rule: D.HeightRule.ATLEAST } : b.rowHeight ? { value: b.rowHeight, rule: D.HeightRule.ATLEAST } : undefined });
+          height: (L && Array.isArray(b.rowF) && b.rowF[ri] > 0) ? { value: Math.max(120, Math.round(b.rowF[ri] * PAGE_H)), rule: D.HeightRule.EXACT }
+                : (L && L.rowH) ? { value: L.rowH, rule: D.HeightRule.ATLEAST } : b.rowHeight ? { value: b.rowHeight, rule: D.HeightRule.ATLEAST } : undefined });
       });
       return new D.Table({ width: { size: totalW, type: D.WidthType.DXA }, columnWidths: widths, rows: trs,
         indent: (!L && indent) ? { size: indent, type: D.WidthType.DXA } : undefined,
@@ -164,20 +165,26 @@
                      leftFromText: 0, rightFromText: 0, topFromText: 0, bottomFromText: 0 } : undefined });
     }
 
-    const out = [];
+    let out = [];
+    const sections = [];
     let pageNo = 0;
     for (const b of doc.blocks || []) {
       const L = (LAYOUT && Array.isArray(b.box) && b.box.length === 4) ? lay(b) : null;
       switch (b.type) {
         case "pagebg": {
           const img = b.image;
+          const bgW = b.size ? Math.round(b.size.w / 15) : 794, bgH = b.size ? Math.round(b.size.h / 15) : 1123;
           const bgRun = img ? new D.ImageRun({ type: img.kind || "jpg", data: img.data,
-            transformation: { width: 794, height: 1123 },
+            transformation: { width: bgW, height: bgH },
             floating: { horizontalPosition: { relative: D.HorizontalPositionRelativeFrom.PAGE, offset: 0 },
                         verticalPosition: { relative: D.VerticalPositionRelativeFrom.PAGE, offset: 0 },
                         behindDocument: true, allowOverlap: true, lockAnchor: true,
                         wrap: { type: D.TextWrappingType.NONE } } }) : null;
-          out.push(new D.Paragraph({ pageBreakBefore: pageNo > 0, spacing: { before: 0, after: 0, line: 20, lineRule: D.LineRuleType.EXACT },
+          if (LAYOUT) {   // every page is its own section: its size follows the picture
+            if (out.length) sections.push({ w: PAGE_W, h: PAGE_H, children: out });
+            out = []; if (b.size && b.size.w > 1000 && b.size.h > 1000) { PAGE_W = b.size.w; PAGE_H = b.size.h; } else { PAGE_W = 11906; PAGE_H = 16838; }
+          }
+          out.push(new D.Paragraph({ pageBreakBefore: !LAYOUT && pageNo > 0, spacing: { before: 0, after: 0, line: 20, lineRule: D.LineRuleType.EXACT },
             children: bgRun ? [bgRun, new D.TextRun({ text: "", size: 2 })] : [new D.TextRun({ text: "", size: 2 })] }));
           pageNo++;
           break;
@@ -227,8 +234,9 @@
     return new D.Document({
       creator: "Відновлення документів",
       styles: { default: { document: { run: { font: LAYOUT ? FONTS.serif : FONT, size: BASE * 2 } } } },
-      sections: [{ properties: { page: { size: { width: PAGE_W, height: PAGE_H },
-        margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN, header: 0, footer: 0 } } }, children: out }],
+      sections: (LAYOUT ? sections.concat([{ w: PAGE_W, h: PAGE_H, children: out }]).filter(x => x.children.length) : [{ w: PAGE_W, h: PAGE_H, children: out }])
+        .map(sec => ({ properties: { page: { size: sec.w > sec.h ? { width: sec.h, height: sec.w, orientation: D.PageOrientation.LANDSCAPE } : { width: sec.w, height: sec.h },
+          margin: { top: MARGIN, bottom: MARGIN, left: MARGIN, right: MARGIN, header: 0, footer: 0 } } }, children: sec.children })),
     });
   }
   if (typeof module !== "undefined" && module.exports) module.exports = { buildDocx };

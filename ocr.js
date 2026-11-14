@@ -144,8 +144,8 @@
   }
 
   /* photo preparation: enough resolution for small print + even lighting (for recognition only) */
-  function upscale(canvas) {
-    const k = canvas.width < 2000 ? Math.min(2.5, 2400 / canvas.width) : 1;
+  function upscale(canvas, kForce) {
+    const k = kForce || (canvas.width < 2000 ? Math.min(2.5, 2400 / canvas.width) : 1);
     if (k <= 1.05) return canvas;
     const c = document.createElement("canvas"); c.width = Math.round(canvas.width * k); c.height = Math.round(canvas.height * k);
     const g = c.getContext("2d"); g.imageSmoothingQuality = "high"; g.drawImage(canvas, 0, 0, c.width, c.height); return c;
@@ -174,9 +174,19 @@
   /* ---------- main ---------- */
   OCR.page = async function (canvas0, onProgress) {
     const w = await OCR.worker(onProgress);
-    const canvas = upscale(canvas0);
-    const prep = flatten(canvas);
-    const { data } = await w.recognize(prep, { rotateAuto: true }, { blocks: true, imageColor: false, imageGrey: false, rotateRadians: true });
+    let canvas = upscale(canvas0);
+    // ruling lines confuse the recogniser ("|", lost decimal points): paint them white in the copy it reads
+    const clean = c => { const pr = flatten(c); const M0 = inkMap(pr); const L0 = findLines(M0); const g = pr.getContext("2d"); g.fillStyle = "#fff";
+      for (const l of L0.h) g.fillRect(l.x0 - 1, l.y - l.t / 2 - 2, l.x1 - l.x0 + 2, l.t + 4);
+      for (const l of L0.v) g.fillRect(l.x - l.t / 2 - 2, l.y0 - 1, l.t + 4, l.y1 - l.y0 + 2);
+      return pr; };
+    let { data } = await w.recognize(clean(canvas), { rotateAuto: true }, { blocks: true, imageColor: false, imageGrey: false, rotateRadians: true });
+    // very small print (screenshots, small photos): read again at a bigger scale
+    { const hs = []; for (const b of data.blocks || []) for (const p of b.paragraphs || []) for (const l of p.lines || []) for (const wd of l.words || []) if (wd.confidence > 50) hs.push(wd.bbox.y1 - wd.bbox.y0);
+      const mh = median(hs), k0 = canvas.width / canvas0.width;
+      if (mh && mh < 30 && k0 * 34 / mh <= 4.2) { const k = Math.min(4.2, k0 * 34 / mh); canvas = upscale(canvas0, k);
+        if (onProgress) onProgress({ status: "recognizing text", progress: 0 });
+        ({ data } = await w.recognize(clean(canvas), { rotateAuto: true }, { blocks: true, imageColor: false, imageGrey: false, rotateRadians: true })); } }
     let work = canvas;
     if (data.rotateRadians && Math.abs(data.rotateRadians) > 0.002) {
       // Tesseract reports word boxes in its rotated frame: rotate the colour picture the same way (around the centre, same size)
@@ -205,6 +215,29 @@
         r /= k; g2 /= k; b2 /= k; const mx = Math.max(r, g2, b2), mn = Math.min(r, g2, b2);
         wd.sat = mx > 0 ? (mx - mn) / mx : 0; wd.colour = px.length > 8 && mx > 40 && wd.sat > 0.155; } }
     OCR._dbg = words.map(q => [q.text, +q.sat.toFixed(2), Math.round(q.conf), Math.round(q.x0), Math.round(q.y0), q.colour]);
+    // ruling lines and tables are needed early: dense-picture search must ignore them
+    const LINES = findLines(M);
+    const tables = findTables(M, LINES);
+    const inTable = (x, y) => tables.some(T => x >= T.box.x0 && x <= T.box.x1 && y >= T.box.y0 && y <= T.box.y1);
+    const inkNL = M.ink.slice();
+    for (const l of LINES.h) for (let y = Math.max(0, Math.round(l.y - l.t / 2 - 2)); y <= Math.min(M.H - 1, Math.round(l.y + l.t / 2 + 2)); y++) for (let x = Math.max(0, l.x0 | 0); x <= Math.min(M.W - 1, l.x1 | 0); x++) inkNL[y * M.W + x] = 0;
+    for (const l of LINES.v) for (let x = Math.max(0, Math.round(l.x - l.t / 2 - 2)); x <= Math.min(M.W - 1, Math.round(l.x + l.t / 2 + 2)); x++) for (let y = Math.max(0, l.y0 | 0); y <= Math.min(M.H - 1, l.y1 | 0); y++) inkNL[y * M.W + x] = 0;
+    // words inside QR codes / dense pictures: find blocks of very dense ink on a coarse grid
+    { const cs = Math.max(6, Math.round(M.W / 90)), gw = Math.ceil(M.W / cs), gh = Math.ceil(M.H / cs), dense = new Uint8Array(gw * gh);
+      for (let gy = 0; gy < gh; gy++) for (let gx = 0; gx < gw; gx++) { let c = 0, n = 0;
+        for (let y = gy * cs; y < Math.min(M.H, (gy + 1) * cs); y += 2) for (let x = gx * cs; x < Math.min(M.W, (gx + 1) * cs); x += 2) { n++; c += inkNL[y * M.W + x]; }
+        dense[gy * gw + gx] = n && c / n > 0.33 ? 1 : 0; }
+      // keep only clusters of at least 3x3 dense cells (text never fills cells that solidly over such an area)
+      const keepD = new Uint8Array(gw * gh), seen = new Uint8Array(gw * gh);
+      for (let i = 0; i < gw * gh; i++) { if (!dense[i] || seen[i]) continue; const st = [i], comp = []; seen[i] = 1;
+        while (st.length) { const j = st.pop(); comp.push(j); const x = j % gw, y = (j / gw) | 0;
+          for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1],[1,-1],[-1,1]]) { const xx = x + dx, yy = y + dy, k = yy * gw + xx; if (xx >= 0 && yy >= 0 && xx < gw && yy < gh && dense[k] && !seen[k]) { seen[k] = 1; st.push(k); } } }
+        const xs = comp.map(j => j % gw), ys = comp.map(j => (j / gw) | 0);
+        const bw = Math.max(...xs) - Math.min(...xs) + 1, bh = Math.max(...ys) - Math.min(...ys) + 1;
+        if (comp.length >= 9 && bw >= 3 && bh >= 3 && comp.length / (bw * bh) > 0.35)
+          for (let y = Math.min(...ys) - 1; y <= Math.max(...ys) + 1; y++) for (let x = Math.min(...xs) - 1; x <= Math.max(...xs) + 1; x++) if (x >= 0 && y >= 0 && x < gw && y < gh) keepD[y * gw + x] = 1; }
+      const inDense = (x, y) => { const gx = Math.floor(x / cs), gy = Math.floor(y / cs); return gx >= 0 && gy >= 0 && gx < gw && gy < gh && keepD[gy * gw + gx]; };
+      for (const wd of words) { const cx = (wd.x0 + wd.x1) / 2, cy = (wd.y0 + wd.y1) / 2; if (!inTable(cx, cy) && inDense(cx, cy) && wd.conf < 90) wd.colour = true; } }
     // garbage: very unsure words, and lines that are mostly unsure / symbol noise (from drawings, logos, stains)
     const lineWords = new Map(); for (const wd of words) { if (!lineWords.has(wd.line)) lineWords.set(wd.line, []); lineWords.get(wd.line).push(wd); }
     const keep = new Set();
@@ -240,7 +273,9 @@
       wd.bold = wd.text.replace(/[^\p{L}\d]/gu, "").length >= 2 && (wd.sw > medS * 1.32 || (big && wd.sw > medS * 1.12)); }
 
     // tables
-    const tables = findTables(M, findLines(M));
+    let groupsFontHint = null;
+    // a vertical rule between two words means they belong to different columns
+    const vSep = (xa, xb, ya, yb) => LINES.v.some(l => l.x > xa - 2 && l.x < xb + 2 && l.y0 < ya + 2 && l.y1 > yb - 2);
     const blocks = [], used = new Set();
     for (const T of tables) {
       const { ys, xs, box } = T, R = ys.length - 1, C = xs.length - 1;
@@ -268,8 +303,10 @@
         rows.push(row); }
       const tw = words.filter((_, i) => used.has(i));
       const hh = median(tw.map(q => q.y1 - q.y0)) || (ys[1] - ys[0]) * 0.5;
+      for (const row of rows) for (const c of row) c.text = String(c.text).split("\n").map(t => t.replace(/^[|\[\]]+\s*|\s*[|\[\]]+$/g, "").replace(/\s+\|\s+/g, " ")).join("\n").trim();
+      const tFont = (() => { const f = groupsFontHint; return f || "serif"; })();
       blocks.push({ type: "table", borders: "all", header: 0, rows, widths: xs.slice(1).map((x, i) => x - xs[i]),
-        bbox: [box.x0 / W, box.y0 / H, box.x1 / W, box.y1 / H], size: Math.max(6, Math.min(14, Math.round(hh / 0.95 * 841.89 / H * 2) / 2)), font: "serif" });
+        bbox: [box.x0 / W, box.y0 / H, box.x1 / W, box.y1 / H], _hF: hh / H, _rowF: ys.slice(1).map((y, i) => (y - ys[i]) / H), font: tFont });
     }
 
     // free text: split each Tesseract line at wide gaps into segments
@@ -281,7 +318,8 @@
       const h = median(ws.map(q => q.y1 - q.y0)) || 10;
       let cur = [ws[0]];
       const flush = () => { if (!cur.length) return; segs.push({ ws: cur, x0: Math.min(...cur.map(q => q.x0)), x1: Math.max(...cur.map(q => q.x1)), y0: Math.min(...cur.map(q => q.y0)), y1: Math.max(...cur.map(q => q.y1)), h: median(cur.map(q => q.y1 - q.y0)) }); cur = []; };
-      for (let i = 1; i < ws.length; i++) { if (ws[i].x0 - ws[i - 1].x1 > Math.max(2.2 * h, W * 0.06)) flush(); cur.push(ws[i]); }
+      for (let i = 1; i < ws.length; i++) { const a = ws[i - 1], b = ws[i];
+        if (b.x0 - a.x1 > Math.max(2.2 * h, W * 0.06) || vSep(a.x1, b.x0, Math.min(a.y0, b.y0), Math.max(a.y1, b.y1))) flush(); cur.push(b); }
       flush();
     }
     // glue pieces of one printed line that Tesseract returned as separate lines (watermarks, columns detection)
@@ -291,6 +329,7 @@
         const A = segs[i], B = segs[j]; const h = Math.max(A.h, B.h);
         const ov = Math.min(A.y1, B.y1) - Math.max(A.y0, B.y0); if (ov < 0.6 * Math.min(A.y1 - A.y0, B.y1 - B.y0)) continue;
         const gap = B.x0 - A.x1; if (gap < -0.3 * h || gap > Math.max(2.2 * h, W * 0.06)) continue;
+        if (vSep(A.x1, B.x0, Math.max(A.y0, B.y0), Math.min(A.y1, B.y1))) continue;
         const ws = A.ws.concat(B.ws).sort((p, q) => p.x0 - q.x0);
         segs[i] = { ws, x0: Math.min(A.x0, B.x0), x1: Math.max(A.x1, B.x1), y0: Math.min(A.y0, B.y0), y1: Math.max(A.y1, B.y1), h: median(ws.map(q => q.y1 - q.y0)) };
         segs.splice(j, 1); changed = true; break outer; } }
@@ -319,7 +358,12 @@
       famOf.push(sv - sa); votes += (sv - sa) * Math.min(60, txt.length);
     }
     const pageFont = votes >= 0 ? "serif" : "sans";
+    for (const b of blocks) if (b.type === "table") b.font = pageFont;
     groups.forEach((g, k) => {
+      // lonely scraps (1-3 letters, unsure) are noise from lines and pictures
+      const letters = g.map(s => s.ws.map(q => q.text).join("")).join("").replace(/[^\p{L}\d]/gu, "");
+      const meanC = g.reduce((a, s) => a + s.ws.reduce((b2, q) => b2 + q.conf, 0), 0) / Math.max(1, g.reduce((a, s) => a + s.ws.length, 0));
+      if (!letters.length || (letters.length <= 3 && meanC < 80 && !(/^\d+$/.test(letters) && meanC >= 75))) return;
       // smooth bold over a printed line: most of it bold -> the whole line is bold
       for (const s of g) { const tot = s.ws.reduce((a, q) => a + q.text.length, 0), b = s.ws.filter(q => q.bold).reduce((a, q) => a + q.text.length, 0);
         if (tot && b / tot >= 0.6) s.ws.forEach(q => { q.bold = true; }); }
